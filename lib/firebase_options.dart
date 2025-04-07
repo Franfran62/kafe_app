@@ -59,4 +59,5 @@ class DefaultFirebaseOptions {
     projectId: 'kafeapp-72608',
     storageBucket: 'kafeapp-72608.firebasestorage.app',
   );
+
 }
