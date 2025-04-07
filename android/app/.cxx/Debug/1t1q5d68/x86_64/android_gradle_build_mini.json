@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Applications/MAMP/htdocs/ITROOM/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/franfran/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/franfran/Desktop/examen-deuxieme-annee/kafe_app/android/app/.cxx/Debug/1t1q5d68/x86_64",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/franfran/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/franfran/Desktop/examen-deuxieme-annee/kafe_app/android/app/.cxx/Debug/1t1q5d68/x86_64",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

@@ -1,0 +1,2 @@
+/Users/franfran/Desktop/examen-deuxieme-annee/kafe_app/android/app/.cxx/Debug/1t1q5d68/arm64-v8a/CMakeFiles/edit_cache.dir
+/Users/franfran/Desktop/examen-deuxieme-annee/kafe_app/android/app/.cxx/Debug/1t1q5d68/arm64-v8a/CMakeFiles/rebuild_cache.dir

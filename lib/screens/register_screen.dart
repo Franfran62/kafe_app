@@ -46,7 +46,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
 
         await _firestore.createPlayer(player);
-        GoRouter.of(context).pushNamed('/');
+        GoRouter.of(context).pushNamed('game_home');
 
       } on FirebaseAuthException catch (e) {
         print("Erreur : ${e.message}");

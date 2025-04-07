@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       Future.microtask(() {
-        GoRouter.of(context).pushReplacementNamed('/');
+        GoRouter.of(context).pushReplacementNamed('game_home');
       });
     }
   }
@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
           await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
         }
         if (mounted) {
-          context.go('/');
+          GoRouter.of(context).pushNamed('game_home');
         }
 
       } on FirebaseAuthException catch (e) {
