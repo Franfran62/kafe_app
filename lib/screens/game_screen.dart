@@ -6,7 +6,7 @@ class GameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MainScaffold(
-      title: "Page d'accueil",
+      title: "Kafé",
       );
   }
 }

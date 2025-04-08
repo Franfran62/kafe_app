@@ -10,6 +10,7 @@ final ThemeData kafeTheme = ThemeData(
     secondary: const Color(0xFFA1887F),
     secondaryContainer: const Color(0xFFD7CCC8),
   ),
+  disabledColor: const Color(0xFFC2B5A0),
   appBarTheme: const AppBarTheme(
     backgroundColor: Color(0xFF5D4037),
     foregroundColor: Colors.white,
