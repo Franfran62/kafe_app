@@ -14,7 +14,7 @@ class Slot {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'kaféType': kafeType,
+      'kafeType': kafeType,
       'plantedAt': plantedAt?.toIso8601String(),
       'harvested': harvested,
     };
@@ -23,7 +23,7 @@ class Slot {
   factory Slot.fromMap(Map<String, dynamic> map) {
     return Slot(
       id: map['id'],
-      kafeType: map['kaféType'],
+      kafeType: map['kafeType'],
       plantedAt: map['plantedAt'] != null ? DateTime.parse(map['plantedAt']) : null,
       harvested: map['harvested'] ?? false,
     );
