@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:kafe_app/widgets/FormPlayer.dart';
+import 'package:kafe_app/widgets/form_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/services/player_service.dart';

@@ -3,7 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
-import 'package:kafe_app/widgets/FormPlayer.dart';
+import 'package:kafe_app/widgets/field_name_modal.dart';
+import 'package:kafe_app/widgets/form_player.dart';
 import 'package:provider/provider.dart';
 import '../models/player.dart';
 import '../services/player_service.dart';
@@ -26,34 +27,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final PlayerService _playerService = PlayerService();
   final FieldService _fieldService = FieldService();
 
-  Future<String> _showFieldNameDialog(BuildContext context) async {
-    final controller = TextEditingController();
-
-    final result = await showDialog<String>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Nom de votre premier champ"),
-          content: TextField(
-            controller: controller,
-            decoration: const InputDecoration(
-              hintText: "Ex : Mon super champ 🌾",
-            ),
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(controller.text.trim()),
-              child: const Text("Valider"),
-            ),
-          ],
-        );
-      },
-    );
-
-    return result ?? "Champ #1";
-  }
-
-
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -75,13 +48,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               .loadPlayer(uid);
         }
 
-        final fieldName = await _showFieldNameDialog(context);
+        final fieldName = await showFieldNameModal(context, isFirst: true) ?? "Champ #1";
         await _playerService.createPlayer(player);
         await _fieldService.createInitialField(player.uid, fieldName);
 
         GoRouter.of(context).pushNamed('login');
       } on FirebaseAuthException catch (e) {
-        print("Erreur : ${e.message}");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.message}")),
         );

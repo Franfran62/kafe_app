@@ -21,6 +21,15 @@ class FieldProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> reloadFields(String playerId) async {
+    _isLoading = true;
+    notifyListeners();
+
+    _fields = await _fieldService.getFieldsByPlayer(playerId);
+    _isLoading = false;
+    notifyListeners();
+  }
+
   void clear() {
     _fields = [];
     notifyListeners();

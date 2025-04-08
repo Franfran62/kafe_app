@@ -41,4 +41,24 @@ class Player {
       gold: map['gold'],
     );
   }
+
+   Player copyWith({
+    String? uid,
+    String? name,
+    String? firstname,
+    String? email,
+    int? deevee,
+    int? gold,
+    String? avatarUrl,
+  }) {
+    return Player(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      firstname: firstname ?? this.firstname,
+      email: email ?? this.email,
+      deevee: deevee ?? this.deevee,
+      gold: gold ?? this.gold,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
+    );
+  }
 }

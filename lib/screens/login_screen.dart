@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/providers/player_provider.dart';
-import 'package:kafe_app/widgets/FormPlayer.dart';
+import 'package:kafe_app/widgets/form_player.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
