@@ -27,5 +27,14 @@ extension FieldSpecialtyExtension on FieldSpecialty {
     }
   }
 
+  double get growthFactor {
+    switch (this) {
+      case FieldSpecialty.timeHalved:
+        return 0.5;
+      default:
+        return 1.0;
+    }
+  }
+
   String toFirestore() => label;
 }

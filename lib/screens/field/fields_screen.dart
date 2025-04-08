@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/providers/field_provider.dart';
@@ -9,9 +10,24 @@ import 'package:kafe_app/styles/game_asset.dart';
 import 'package:kafe_app/widgets/field_name_modal.dart';
 import 'package:provider/provider.dart';
 
-class FieldsScreen extends StatelessWidget {
+class FieldsScreen extends StatefulWidget {
+  @override
+  _FieldsScreenState createState() => _FieldsScreenState();
+}
+
+class _FieldsScreenState extends State<FieldsScreen> {
+
   final FieldService _fieldService = FieldService();
-  FieldsScreen({super.key});
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    final player = Provider.of<PlayerProvider>(context, listen: false).player;
+    if (player != null) {
+      Provider.of<FieldProvider>(context, listen: false).loadFields(player.uid);
+    }
+  });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +37,6 @@ class FieldsScreen extends StatelessWidget {
     if (fieldProvider.isLoading || player == null) {
       return const Center(child: CircularProgressIndicator());
     }
-
     final fields = fieldProvider.fields;
 
     return SingleChildScrollView(
@@ -38,9 +53,16 @@ class FieldsScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16)),
                   elevation: 2,
                   child: ListTile(
+                    onTap: () {
+                      GoRouter.of(context).pushNamed(
+                        'field_detail',
+                        pathParameters: {'id': field.id}, 
+                        extra: field, 
+                      );
+                    },
                     title: Text(field.name),
                     subtitle: Text(
-                        "${field.slots.where((s) => s.kafeType != null).length}/4 actifs"),
+                        "${field.slots.where((s) => s.kafeType != null).length}/${GameConfig.slotsPerField} actifs"),
                     trailing: Text(field.specialty.label),
                   ),
                 )),
@@ -49,10 +71,9 @@ class FieldsScreen extends StatelessWidget {
               child: ElevatedButton.icon(
                 onPressed: player.deevee >= GameConfig.fieldPurchaseCost
                     ? () async {
-                        final name = await showFieldNameModal(context) ??
-                            "Champ #${fields.length + 1}";
-                        final success =
-                            await FieldService().purchaseField(player, name);
+                        final name = await showFieldNameModal(context);
+                        if (name == null) return;
+                        final success = await FieldService().purchaseField(player, name);
                         if (success) {
                           await context
                               .read<FieldProvider>()
