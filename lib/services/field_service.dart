@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:kafe_app/models/enums/specialty.dart';
+import 'package:kafe_app/models/enums/field_specialty.dart';
 import '../models/field.dart';
 import '../models/slot.dart';
 
@@ -8,7 +8,7 @@ class FieldService {
   final _db = FirebaseFirestore.instance;
 
   Future<void> createInitialField(String playerId) async {
-    final specialties = Specialty.values;
+    final specialties = FieldSpecialty.values;
     final random = Random();
     final specialty = specialties[random.nextInt(specialties.length)];
 
@@ -18,6 +18,7 @@ class FieldService {
 
     final field = Field(
       id: doc.id,
+      name: "Champ #1",
       playerId: playerId,
       specialty: specialty,
       slots: slots,
