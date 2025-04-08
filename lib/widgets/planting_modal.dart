@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
-import 'package:kafe_app/rules/game_config.dart';
-import 'package:kafe_app/styles/game_asset.dart';
+import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/game/game_config.dart';
+import 'package:kafe_app/game/game_asset.dart';
+import 'package:provider/provider.dart';
 
 Future<KafeType?> showPlantingModal(BuildContext context) async {
+
+  final player = context.read<PlayerProvider>().player!;
+
   return await showModalBottomSheet<KafeType>(
     context: context,
     shape: const RoundedRectangleBorder(
@@ -30,6 +35,7 @@ Future<KafeType?> showPlantingModal(BuildContext context) async {
               final cost = GameConfig.costFor(type);
               final time = GameConfig.growthTimes[type]!;
               final duration = _formatDuration(time);
+              final canAfford = player.deevee >= cost;
 
               return Card(
                 shape: RoundedRectangleBorder(
@@ -38,15 +44,15 @@ Future<KafeType?> showPlantingModal(BuildContext context) async {
                 elevation: 2,
                 margin: const EdgeInsets.symmetric(vertical: 6),
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 12, horizontal: 16),
-                  onTap: () => Navigator.of(context).pop(type),
+                  enabled: canAfford,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  onTap: canAfford ? () => Navigator.of(context).pop(type) : null,
                   title: Text(type.label),
                   subtitle: Text("Temps de pousse : $duration"),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("$cost ${GameAsset.deeveeEmoji}", style: Theme.of(context).textTheme.bodyMedium,),
+                      Text("$cost ${GameAsset.deeveeEmoji}", style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(width: 4),
                     ],
                   ),

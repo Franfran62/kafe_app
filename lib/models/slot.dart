@@ -1,5 +1,5 @@
 import 'package:kafe_app/models/enums/field_specialty.dart';
-import 'package:kafe_app/rules/game_config.dart';
+import 'package:kafe_app/game/game_config.dart';
 
 class Slot {
   final String id;

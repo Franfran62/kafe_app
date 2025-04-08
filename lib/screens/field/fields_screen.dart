@@ -4,9 +4,9 @@ import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
-import 'package:kafe_app/rules/game_config.dart';
+import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/services/field_service.dart';
-import 'package:kafe_app/styles/game_asset.dart';
+import 'package:kafe_app/game/game_asset.dart';
 import 'package:kafe_app/widgets/field_name_modal.dart';
 import 'package:provider/provider.dart';
 

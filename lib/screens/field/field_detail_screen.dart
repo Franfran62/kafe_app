@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
-import 'package:kafe_app/styles/game_asset.dart';
+import 'package:kafe_app/game/game_asset.dart';
 import 'package:kafe_app/widgets/slot_item.dart';
 
 class FieldDetailScreen extends StatelessWidget {
@@ -35,6 +35,7 @@ class FieldDetailScreen extends StatelessWidget {
                 index: i,
                 slot: slot,
                 specialty: field.specialty,
+                fieldId: field.id,
               );
             }),
           ],

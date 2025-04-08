@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
+import 'package:kafe_app/models/enums/kafe_type.dart';
 import 'package:kafe_app/models/player.dart';
-import 'package:kafe_app/rules/game_config.dart';
+import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/services/player_service.dart';
 import '../models/field.dart';
 import '../models/slot.dart';
@@ -71,5 +72,20 @@ class FieldService {
     await _playerService.decrementDeevee(player, GameConfig.fieldPurchaseCost);
 
     return true;
+  }
+
+  Future<void> plantKafe({required Player player, required String fieldId, required int slotIndex, required KafeType kafeType}) async {
+    
+    final cost = GameConfig.costFor(kafeType);
+    final collection = _db.collection('fields').doc(fieldId);
+    if (player.deevee < cost) {
+      return;
+    }
+
+    await collection.update({
+      'slots.$slotIndex.kafeType': kafeType.name,
+      'slots.$slotIndex.startTime': DateTime.now().toIso8601String(),
+    });
+    await _playerService.decrementDeevee(player, cost);
   }
 }

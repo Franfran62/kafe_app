@@ -1,20 +1,28 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
+import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/models/slot.dart';
-import 'package:kafe_app/styles/game_asset.dart';
+import 'package:kafe_app/providers/field_provider.dart';
+import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/screens/field/field_detail_screen.dart';
+import 'package:kafe_app/services/field_service.dart';
+import 'package:kafe_app/game/game_asset.dart';
 import 'package:kafe_app/widgets/planting_modal.dart';
+import 'package:provider/provider.dart';
 
 class SlotItem extends StatefulWidget {
   final Slot slot;
   final int index;
   final FieldSpecialty specialty;
+  final String fieldId;
 
   const SlotItem({
     super.key,
     required this.slot,
     required this.index,
     required this.specialty,
+    required this.fieldId,
   });
 
   @override
@@ -23,6 +31,7 @@ class SlotItem extends StatefulWidget {
 
 class _SlotItemState extends State<SlotItem> {
   late Timer _timer;
+  final FieldService _fieldService = FieldService();
 
   @override
   void initState() {
@@ -49,6 +58,7 @@ class _SlotItemState extends State<SlotItem> {
   }
 
   Widget _buildEmptySlot() {
+    
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
@@ -59,9 +69,19 @@ class _SlotItemState extends State<SlotItem> {
         onTap: () async {
           final type = await showPlantingModal(context);
           if (type != null) {
-            // TODO: logique de plantation ici
-          }
-        },
+            final field = context.findAncestorWidgetOfExactType<FieldDetailScreen>()!.field;
+            final player = context.read<PlayerProvider>().player!;
+            
+            await _fieldService.plantKafe(
+              player: player,
+              fieldId: field.id,
+              slotIndex: widget.index,
+              kafeType: type,
+            );
+            await context.read<FieldProvider>().reloadFields(player.uid);
+            await context.read<PlayerProvider>().loadPlayer(player.uid);
+          }   
+        }
       ),
     );
   }
