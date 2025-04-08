@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/models/slot.dart';
@@ -31,7 +32,7 @@ class SlotItem extends StatefulWidget {
 
 class _SlotItemState extends State<SlotItem> {
   late Timer _timer;
-  final FieldService _fieldService = FieldService();
+  final GameController _gameController = GameController();
 
   @override
   void initState() {
@@ -69,17 +70,12 @@ class _SlotItemState extends State<SlotItem> {
         onTap: () async {
           final type = await showPlantingModal(context);
           if (type != null) {
-            final field = context.findAncestorWidgetOfExactType<FieldDetailScreen>()!.field;
-            final player = context.read<PlayerProvider>().player!;
-            
-            await _fieldService.plantKafe(
-              player: player,
-              fieldId: field.id,
+            _gameController.plantAndRefresh(
+              context: context,
+              fieldId: widget.fieldId,
               slotIndex: widget.index,
               kafeType: type,
             );
-            await context.read<FieldProvider>().reloadFields(player.uid);
-            await context.read<PlayerProvider>().loadPlayer(player.uid);
           }   
         }
       ),

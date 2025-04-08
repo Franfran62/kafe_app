@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/providers/field_provider.dart';
@@ -17,7 +18,8 @@ class FieldsScreen extends StatefulWidget {
 
 class _FieldsScreenState extends State<FieldsScreen> {
 
-  final FieldService _fieldService = FieldService();
+  final GameController _gameController = GameController();
+
   @override
   void initState() {
     super.initState();
@@ -73,15 +75,7 @@ class _FieldsScreenState extends State<FieldsScreen> {
                     ? () async {
                         final name = await showFieldNameModal(context);
                         if (name == null) return;
-                        final success = await FieldService().purchaseField(player, name);
-                        if (success) {
-                          await context
-                              .read<FieldProvider>()
-                              .reloadFields(player.uid);
-                          await context
-                              .read<PlayerProvider>()
-                              .loadPlayer(player.uid);
-                        }
+                        final success = await _gameController.purchaseField(context: context, fieldName: name);
                       }
                     : null,
                 icon: const Icon(Icons.add),
