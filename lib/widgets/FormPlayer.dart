@@ -6,6 +6,9 @@ class FormPlayer extends StatelessWidget {
   final bool isEdit;
   final GlobalKey<FormState> formKey;
 
+  final String? avatarUrl;
+  final VoidCallback? onAvatarTap;
+
   final TextEditingController? nameController;
   final TextEditingController? firstnameController;
   final TextEditingController emailController;
@@ -24,6 +27,8 @@ class FormPlayer extends StatelessWidget {
     this.isRegister = false,
     this.isLogin = false,
     this.isEdit = false,
+    this.avatarUrl,
+    this.onAvatarTap
   });
 
   @override
@@ -37,12 +42,16 @@ class FormPlayer extends StatelessWidget {
           if (isEdit)
             Column(
               children: [
-                const Text("Avatar (bientôt 👤)"),
+                const Text("Avatar"),
                 const SizedBox(height: 10),
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[300],
-                  child: const Icon(Icons.person, size: 30),
+                GestureDetector(
+                  onTap: () => onAvatarTap?.call(),
+                  child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.grey[300],
+                    backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
+                    child: avatarUrl == null ? const Icon(Icons.person, size: 30) : null,
+                  ),
                 ),
                 const SizedBox(height: 20),
               ],
@@ -53,7 +62,7 @@ class FormPlayer extends StatelessWidget {
             TextFormField(
               controller: nameController,
               decoration: const InputDecoration(labelText: "Nom"),
-              validator: (value) => value!.isEmpty ? "Champ requis" : null,
+              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
             ),
 
           // Prénom (uniquement en édition et création de profil)
@@ -61,7 +70,7 @@ class FormPlayer extends StatelessWidget {
             TextFormField(
               controller: firstnameController,
               decoration: const InputDecoration(labelText: "Prénom"),
-              validator: (value) => value!.isEmpty ? "Champ requis" : null,
+              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
             ),
 
           // Email (always)
@@ -69,7 +78,7 @@ class FormPlayer extends StatelessWidget {
             TextFormField(
               controller: emailController,
               decoration: const InputDecoration(labelText: "Email"),
-              validator: (value) => value!.isEmpty ? "Champ requis" : null,
+              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
             ),
 
           // Mot de passe (always)
@@ -78,7 +87,7 @@ class FormPlayer extends StatelessWidget {
             decoration: const InputDecoration(labelText: "Mot de passe"),
             obscureText: true,
             validator: (value) =>
-                value!.length < 6 ? "Minimum 6 caractères" : null,
+                (!isEdit && value!.length < 6) ? "Minimum 6 caractères" : null,
           ),
 
           const SizedBox(height: 20),

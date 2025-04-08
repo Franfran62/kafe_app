@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:kafe_app/widgets/MainScaffold.dart';
 
 class GameScreen extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Game Screen'),
-      ),
-      body: Center(
-        child: Text(
-          'Hello, World!',
-          style: TextStyle(fontSize: 24),
-        ),
-      ),
-    );
+    return MainScaffold(
+      title: "Page d'accueil",
+      );
   }
 }

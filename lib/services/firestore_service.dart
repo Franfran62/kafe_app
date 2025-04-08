@@ -15,4 +15,16 @@ class FirestoreService {
     }
     return null;
   }
+
+  Future<void> updatePlayer(Player player) async {
+    final data = <String, dynamic>{};
+    if (player.name.isNotEmpty) data['name'] = player.name;
+    if (player.firstname.isNotEmpty) data['firstname'] = player.firstname;
+    if (player.email.isNotEmpty) data['email'] = player.email;
+    await _db.collection('players').doc(player.uid).update(data);
+  }
+
+  Future<void> updateAvatar(String uid, String avatarUrl) async {
+    await _db.collection('players').doc(uid).update({'avatarUrl': avatarUrl});
+}
 }

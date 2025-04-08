@@ -4,6 +4,7 @@ class Player {
   final String name;
   final String firstname;
   final String email;
+  final String? avatarUrl;
   final int deevee;
   final int gold;
 
@@ -12,6 +13,7 @@ class Player {
     required this.name,
     required this.firstname,
     required this.email,
+    this.avatarUrl,
     this.deevee = 10,
     this.gold = 0,
   });
@@ -22,6 +24,7 @@ class Player {
       'name': name,
       'firstname': firstname,
       'email': email,
+      'avatarUrl': avatarUrl,
       'deevee': deevee,
       'gold': gold,
     };
@@ -33,6 +36,7 @@ class Player {
       name: map['name'],
       firstname: map['firstname'],
       email: map['email'],
+      avatarUrl: map['avatarUrl'],
       deevee: map['deevee'],
       gold: map['gold'],
     );
