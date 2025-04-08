@@ -75,7 +75,7 @@ class _FieldsScreenState extends State<FieldsScreen> {
                     ? () async {
                         final name = await showFieldNameModal(context);
                         if (name == null) return;
-                        final success = await _gameController.purchaseField(context: context, fieldName: name);
+                        await _gameController.purchaseField(context: context, fieldName: name);
                       }
                     : null,
                 icon: const Icon(Icons.add),

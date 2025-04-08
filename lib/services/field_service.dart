@@ -57,11 +57,19 @@ class FieldService {
     await doc.set(field.toMap());
   }
 
-  Future<void> updateSlot({required String fieldId, required int slotIndex, required KafeType kafeType}) async {
-    final docRef = _db.collection('fields').doc(fieldId);
-    await docRef.update({
-      'slots.$slotIndex.kafeType': kafeType.name,
-      'slots.$slotIndex.startTime': DateTime.now().toIso8601String(),
+  Future<void> updateSlot({required Field field, required int slotIndex, required KafeType kafeType}) async {
+    final List<Slot> slots = field.slots;
+    final updatedSlot = slots[slotIndex].copyWith(
+      kafeType: kafeType.name,
+      plantedAt: DateTime.now(),
+      harvested: false,
+    );
+
+    final updatedSlots = [...slots];
+    updatedSlots[slotIndex] = updatedSlot;
+
+    await _db.collection('fields').doc(field.id).update({
+      'slots': updatedSlots.map((slot) => slot.toMap()).toList(),
     });
   }
 }

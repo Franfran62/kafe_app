@@ -34,8 +34,7 @@ class FieldDetailScreen extends StatelessWidget {
               return SlotItem(
                 index: i,
                 slot: slot,
-                specialty: field.specialty,
-                fieldId: field.id,
+                field: field,
               );
             }),
           ],

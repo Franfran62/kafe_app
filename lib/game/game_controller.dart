@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
+import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
@@ -39,7 +40,7 @@ class GameController {
     await context.read<PlayerProvider>().loadPlayer(player.uid);
   }
 
-  Future<void> plantAndRefresh({required BuildContext context, required String fieldId, required int slotIndex, required KafeType kafeType,
+  Future<void> plantAndRefresh({required BuildContext context, required Field field, required int slotIndex, required KafeType kafeType,
   }) async {
     final player = context.read<PlayerProvider>().player;
     if (player == null) {
@@ -53,7 +54,7 @@ class GameController {
 
     await _playerService.decrementDeevee(player, cost);
     await _fieldService.updateSlot(
-      fieldId: fieldId,
+      field: field,
       slotIndex: slotIndex,
       kafeType: kafeType,
     );

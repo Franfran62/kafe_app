@@ -32,7 +32,7 @@ class Field {
       name: map['name'],
       playerId: map['playerId'],
       specialty: FieldSpecialtyExtension.fromString(map['specialty']),
-      slots: (map['slots'] as List).map((s) => Slot.fromMap(s)).toList(),
+      slots: (map['slots'] as List).map((e) => Slot.fromMap(e)).toList(),
     );
   }
 

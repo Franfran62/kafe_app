@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
+import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/models/slot.dart';
 import 'package:kafe_app/providers/field_provider.dart';
@@ -15,15 +16,13 @@ import 'package:provider/provider.dart';
 class SlotItem extends StatefulWidget {
   final Slot slot;
   final int index;
-  final FieldSpecialty specialty;
-  final String fieldId;
+  final Field field;
 
   const SlotItem({
     super.key,
     required this.slot,
     required this.index,
-    required this.specialty,
-    required this.fieldId,
+    required this.field,
   });
 
   @override
@@ -50,11 +49,9 @@ class _SlotItemState extends State<SlotItem> {
 
   @override
   Widget build(BuildContext context) {
-    final slot = widget.slot;
-    final specialty = widget.specialty;
 
-    if (!slot.isPlanted) return _buildEmptySlot();
-    if (slot.isReady(specialty)) return _buildReadySlot();
+    if (!widget.slot.isPlanted) return _buildEmptySlot();
+    if (widget.slot.isReady(widget.field.specialty)) return _buildReadySlot();
     return _buildGrowingSlot();
   }
 
@@ -72,7 +69,7 @@ class _SlotItemState extends State<SlotItem> {
           if (type != null) {
             _gameController.plantAndRefresh(
               context: context,
-              fieldId: widget.fieldId,
+              field: widget.field,
               slotIndex: widget.index,
               kafeType: type,
             );
@@ -98,7 +95,7 @@ class _SlotItemState extends State<SlotItem> {
   }
 
   Widget _buildGrowingSlot() {
-    final remaining = widget.slot.timeRemaining(widget.specialty)!;
+    final remaining = widget.slot.timeRemaining(widget.field.specialty)!;
     final formatted = _formatDuration(remaining);
 
     return Card(

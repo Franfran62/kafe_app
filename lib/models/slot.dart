@@ -31,6 +31,15 @@ class Slot {
       harvested: map['harvested'] ?? false,
     );
   }
+
+  Slot copyWith({String? id, String? kafeType, DateTime? plantedAt, bool? harvested}) {
+    return Slot(
+      id: id ?? this.id,
+      kafeType: kafeType ?? this.kafeType,
+      plantedAt: plantedAt ?? this.plantedAt,
+      harvested: harvested ?? this.harvested,
+    );
+  }
 }
 
 extension SlotExtension on Slot {
