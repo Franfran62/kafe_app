@@ -6,8 +6,8 @@ import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/widgets/field_name_modal.dart';
 import 'package:kafe_app/widgets/form_player.dart';
 import 'package:provider/provider.dart';
-import '../models/player.dart';
-import '../services/player_service.dart';
+import '../../models/player.dart';
+import '../../services/player_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
