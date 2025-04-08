@@ -7,7 +7,7 @@ import '../models/slot.dart';
 class FieldService {
   final _db = FirebaseFirestore.instance;
 
-  Future<void> createInitialField(String playerId) async {
+  Future<void> createInitialField(String playerId, String fieldName) async {
     final specialties = FieldSpecialty.values;
     final random = Random();
     final specialty = specialties[random.nextInt(specialties.length)];
@@ -18,7 +18,7 @@ class FieldService {
 
     final field = Field(
       id: doc.id,
-      name: "Champ #1",
+      name: fieldName,
       playerId: playerId,
       specialty: specialty,
       slots: slots,
@@ -26,6 +26,7 @@ class FieldService {
 
     await doc.set(field.toMap());
   }
+
 
   Future<List<Field>> getFieldsByPlayer(String playerId) async {
   final snapshot = await _db

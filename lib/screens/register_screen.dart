@@ -26,6 +26,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final PlayerService _playerService = PlayerService();
   final FieldService _fieldService = FieldService();
 
+  Future<String> _showFieldNameDialog(BuildContext context) async {
+    final controller = TextEditingController();
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Nom de votre premier champ"),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: "Ex : Mon super champ 🌾",
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(controller.text.trim()),
+              child: const Text("Valider"),
+            ),
+          ],
+        );
+      },
+    );
+
+    return result ?? "Champ #1";
+  }
+
+
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
@@ -47,8 +75,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               .loadPlayer(uid);
         }
 
+        final fieldName = await _showFieldNameDialog(context);
         await _playerService.createPlayer(player);
-        await _fieldService.createInitialField(player.uid);
+        await _fieldService.createInitialField(player.uid, fieldName);
 
         GoRouter.of(context).pushNamed('game_home');
       } on FirebaseAuthException catch (e) {
