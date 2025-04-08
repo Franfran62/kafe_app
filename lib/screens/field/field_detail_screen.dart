@@ -23,7 +23,7 @@ class FieldDetailScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "${GameAsset.fieldEmoji} ${field.name}",
+              field.name,
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),

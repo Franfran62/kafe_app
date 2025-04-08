@@ -1,8 +1,9 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/slot.dart';
+import 'package:kafe_app/styles/game_asset.dart';
+import 'package:kafe_app/widgets/planting_modal.dart';
 
 class SlotItem extends StatefulWidget {
   final Slot slot;
@@ -42,25 +43,55 @@ class _SlotItemState extends State<SlotItem> {
     final slot = widget.slot;
     final specialty = widget.specialty;
 
-    String title = "Slot ${widget.index + 1}";
-    String subtitle;
+    if (!slot.isPlanted) return _buildEmptySlot();
+    if (slot.isReady(specialty)) return _buildReadySlot();
+    return _buildGrowingSlot();
+  }
 
-    if (!slot.isPlanted) {
-      subtitle = "Planter un fruit";
-    } else if (slot.isReady(specialty)) {
-      subtitle = "Récolter !";
-    } else {
-      final remaining = slot.timeRemaining(specialty);
-      subtitle = "Temps restant : ${_formatDuration(remaining!)}";
-    }
+  Widget _buildEmptySlot() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      child: ListTile(
+        title: Text("Slot ${widget.index + 1}"),
+        subtitle: const Text("${GameAsset.slotEmptyEmoji} Planter un fruit"),
+        trailing: const Icon(Icons.add),
+        onTap: () async {
+          final type = await showPlantingModal(context);
+          if (type != null) {
+            // TODO: logique de plantation ici
+          }
+        },
+      ),
+    );
+  }
+
+  Widget _buildReadySlot() {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 2,
+      child: ListTile(
+        title: Text("Slot ${widget.index + 1}"),
+        subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !"),
+        trailing: Text(widget.slot.kafeType ?? ""),
+        onTap: () {
+          // TODO: FieldService.harvest(widget.slot)
+        },
+      ),
+    );
+  }
+
+  Widget _buildGrowingSlot() {
+    final remaining = widget.slot.timeRemaining(widget.specialty)!;
+    final formatted = _formatDuration(remaining);
 
     return Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: ListTile(
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: slot.kafeType != null ? Text(slot.kafeType!) : null,
+        title: Text("Slot ${widget.index + 1}"),
+        subtitle: Text("${GameAsset.slotPlantEmoji} Temps restant : $formatted"),
+        trailing: Text(widget.slot.kafeType ?? ""),
       ),
     );
   }
@@ -68,8 +99,6 @@ class _SlotItemState extends State<SlotItem> {
   String _formatDuration(Duration duration) {
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds % 60;
-
-    if (minutes == 0) return "$seconds sec";
-    return "$minutes min${seconds > 0 ? " $seconds sec" : ""}";
+    return minutes == 0 ? "$seconds sec" : "$minutes min${seconds > 0 ? " $seconds sec" : ""}";
   }
 }

@@ -45,7 +45,7 @@ class _FieldsScreenState extends State<FieldsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("${GameAsset.fieldEmoji} Champs possédés :",
+            Text("Champs possédés :",
                 style: Theme.of(context).textTheme.headlineSmall),
             const SizedBox(height: 16),
             ...fields.map((field) => Card(
@@ -60,7 +60,7 @@ class _FieldsScreenState extends State<FieldsScreen> {
                         extra: field, 
                       );
                     },
-                    title: Text(field.name),
+                    title: Text("${GameAsset.fieldEmoji}  ${field.name}"),
                     subtitle: Text(
                         "${field.slots.where((s) => s.kafeType != null).length}/${GameConfig.slotsPerField} actifs"),
                     trailing: Text(field.specialty.label),

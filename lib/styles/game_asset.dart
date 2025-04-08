@@ -1,3 +1,6 @@
+import 'package:flutter/widgets.dart';
+
+
 class GameAsset {
 
   /// Monnaies
@@ -8,7 +11,7 @@ class GameAsset {
   static const String goldGrainName = "Grains d’or";
 
   /// Plantes & culture
-  static const String FruitEmoji = "🥭"; // Pour le fruit de kafé récolté
+  static const String FruitEmoji =  "🌻"; // Pour le fruit de kafé récolté
   static const String GrainEmoji = "🥜"; // Pour les grains séchés
 
   /// Champs & slots
