@@ -59,35 +59,47 @@ class FormPlayer extends StatelessWidget {
 
           // Nom (uniquement en édition et création de profil)
           if (isRegister || isEdit)
-            TextFormField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: "Nom"),
-              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: nameController,
+                decoration: const InputDecoration(labelText: "Nom"),
+                validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+              ),
             ),
 
           // Prénom (uniquement en édition et création de profil)
           if (isRegister || isEdit)
-            TextFormField(
-              controller: firstnameController,
-              decoration: const InputDecoration(labelText: "Prénom"),
-              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: firstnameController,
+                decoration: const InputDecoration(labelText: "Prénom"),
+                validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+              ),
             ),
 
           // Email (always)
           if (!isEdit)
-            TextFormField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
-              validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: emailController,
+                decoration: const InputDecoration(labelText: "Email"),
+                validator: (value) => (!isEdit && value!.isEmpty) ? "Champ requis" : null,
+              ),
             ),
 
           // Mot de passe (always)
-          TextFormField(
-            controller: passwordController,
-            decoration: const InputDecoration(labelText: "Mot de passe"),
-            obscureText: true,
-            validator: (value) =>
-                (!isEdit && value!.length < 6) ? "Minimum 6 caractères" : null,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: "Mot de passe"),
+              obscureText: true,
+              validator: (value) =>
+                  (!isEdit && value!.length < 6) ? "Minimum 6 caractères" : null,
+            ),
           ),
 
           const SizedBox(height: 20),
