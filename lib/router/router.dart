@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/screens/account_screen.dart';
 import 'package:kafe_app/screens/fields_screen.dart';
@@ -12,6 +13,11 @@ final goRouter = GoRouter(
       name: "game_home",
       path: '/',
       builder: (context, state) => GameScreen(),
+      redirect: (context, state) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user == null) return '/login';
+        return null;
+      },
     ),
     GoRoute(
       name: "register",

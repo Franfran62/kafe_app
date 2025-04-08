@@ -26,4 +26,15 @@ class FieldService {
 
     await doc.set(field.toMap());
   }
+
+  Future<List<Field>> getFieldsByPlayer(String playerId) async {
+  final snapshot = await _db
+      .collection('fields')
+      .where('playerId', isEqualTo: playerId)
+      .get();
+
+  return snapshot.docs
+      .map((doc) => Field.fromMap(doc.data()))
+      .toList();
+}
 }

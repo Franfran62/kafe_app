@@ -9,7 +9,7 @@ class PlayerProvider with ChangeNotifier {
   Player? get player => _player;
 
   bool get isLoaded => _player != null;
-
+  
   Future<void> loadPlayer(String uid) async {
     _player = await _playerService.getPlayer(uid);
     notifyListeners();

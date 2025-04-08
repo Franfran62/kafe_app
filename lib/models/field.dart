@@ -35,4 +35,9 @@ class Field {
       slots: (map['slots'] as List).map((s) => Slot.fromMap(s)).toList(),
     );
   }
+
+  @override
+  String toString() {
+    return 'Field(id: $id, name: $name, playerId: $playerId, specialty: $specialty, slots: $slots)';
+  }
 }
