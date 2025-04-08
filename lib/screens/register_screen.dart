@@ -79,7 +79,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await _playerService.createPlayer(player);
         await _fieldService.createInitialField(player.uid, fieldName);
 
-        GoRouter.of(context).pushNamed('game_home');
+        GoRouter.of(context).pushNamed('login');
       } on FirebaseAuthException catch (e) {
         print("Erreur : ${e.message}");
         ScaffoldMessenger.of(context).showSnackBar(
