@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:kafe_app/widgets/FormPlayer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kafe_app/models/player.dart';
-import 'package:kafe_app/services/firestore_service.dart';
+import 'package:kafe_app/services/player_service.dart';
 import 'package:provider/provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,9 +24,8 @@ class _AccountScreenState extends State<AccountScreen> {
   final _passwordController = TextEditingController();
   final _nameController = TextEditingController();
   final _firstnameController = TextEditingController();
-  
 
-  final FirestoreService _firestore = FirestoreService();
+  final PlayerService _playerService = PlayerService();
 
   @override
   void initState() {
@@ -42,24 +41,25 @@ class _AccountScreenState extends State<AccountScreen> {
   Future<void> editAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
+        final playerProvider =
+            Provider.of<PlayerProvider>(context, listen: false);
         final existingPlayer = playerProvider.player;
 
         if (existingPlayer != null && existingPlayer.uid.isNotEmpty) {
-            final updatedPlayer = Player(
-              uid: existingPlayer.uid,
-              name: _nameController.text.trim().isNotEmpty
+          final updatedPlayer = Player(
+            uid: existingPlayer.uid,
+            name: _nameController.text.trim().isNotEmpty
                 ? _nameController.text.trim()
                 : existingPlayer.name,
-              firstname: _firstnameController.text.trim().isNotEmpty
+            firstname: _firstnameController.text.trim().isNotEmpty
                 ? _firstnameController.text.trim()
                 : existingPlayer.firstname,
-              email: _emailController.text.trim().isNotEmpty
+            email: _emailController.text.trim().isNotEmpty
                 ? _emailController.text.trim()
                 : existingPlayer.email,
-            );
+          );
 
-          await _firestore.updatePlayer(updatedPlayer);
+          await _playerService.updatePlayer(updatedPlayer);
 
           GoRouter.of(context).pushNamed("game_home");
         }
@@ -88,8 +88,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 title: const Text('Prendre une photo'),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
-                  if (pickedFile != null) await _uploadToStorage(pickedFile, uid!);
+                  final pickedFile =
+                      await picker.pickImage(source: ImageSource.camera);
+                  if (pickedFile != null)
+                    await _uploadToStorage(pickedFile, uid!);
                 },
               ),
               ListTile(
@@ -97,8 +99,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 title: const Text('Choisir dans la galerie'),
                 onTap: () async {
                   Navigator.of(context).pop();
-                  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                  if (pickedFile != null) await _uploadToStorage(pickedFile, uid!);
+                  final pickedFile =
+                      await picker.pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null)
+                    await _uploadToStorage(pickedFile, uid!);
                 },
               ),
             ],
@@ -113,26 +117,27 @@ class _AccountScreenState extends State<AccountScreen> {
     await storageRef.putFile(File(pickedFile.path));
     final downloadUrl = await storageRef.getDownloadURL();
 
-    await _firestore.updateAvatar(uid, downloadUrl);
+    await _playerService.updateAvatar(uid, downloadUrl);
     await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Avatar mis à jour")),
     );
 
-    setState(() {}); 
-    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Mon profil"),
-      leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              GoRouter.of(context).pushNamed("game_home");
-            },
-          ),
+      appBar: AppBar(
+        title: const Text("Mon profil"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).pushNamed("game_home");
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),

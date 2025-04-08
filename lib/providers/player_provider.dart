@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/player.dart';
-import 'package:kafe_app/services/firestore_service.dart';
+import 'package:kafe_app/services/player_service.dart';
 
 class PlayerProvider with ChangeNotifier {
-  final _firestore = FirestoreService();
+  final _playerService = PlayerService();
 
   Player? _player;
   Player? get player => _player;
@@ -11,7 +11,7 @@ class PlayerProvider with ChangeNotifier {
   bool get isLoaded => _player != null;
 
   Future<void> loadPlayer(String uid) async {
-    _player = await _firestore.getPlayer(uid);
+    _player = await _playerService.getPlayer(uid);
     notifyListeners();
   }
 

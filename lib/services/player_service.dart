@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/player.dart';
 
-class FirestoreService {
+class PlayerService {
   final _db = FirebaseFirestore.instance;
 
   Future<void> createPlayer(Player player) async {
@@ -26,5 +26,5 @@ class FirestoreService {
 
   Future<void> updateAvatar(String uid, String avatarUrl) async {
     await _db.collection('players').doc(uid).update({'avatarUrl': avatarUrl});
-}
+  }
 }

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/widgets/FormPlayer.dart';
 import 'package:provider/provider.dart';
 import '../models/player.dart';
-import '../services/firestore_service.dart';
+import '../services/player_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,7 +16,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _firstnameController = TextEditingController();
@@ -23,7 +23,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirestoreService _firestore = FirestoreService();
+  final PlayerService _playerService = PlayerService();
+  final FieldService _fieldService = FieldService();
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
@@ -42,12 +43,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
         final uid = FirebaseAuth.instance.currentUser?.uid;
         if (uid != null) {
-          await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
+          await Provider.of<PlayerProvider>(context, listen: false)
+              .loadPlayer(uid);
         }
 
-        await _firestore.createPlayer(player);
-        GoRouter.of(context).pushNamed('game_home');
+        await _playerService.createPlayer(player);
+        await _fieldService.createInitialField(player.uid);
 
+        GoRouter.of(context).pushNamed('game_home');
       } on FirebaseAuthException catch (e) {
         print("Erreur : ${e.message}");
         ScaffoldMessenger.of(context).showSnackBar(
@@ -70,10 +73,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(title: const Text("Créer un compte"),
-      automaticallyImplyLeading: false,
+      appBar: AppBar(
+        title: const Text("Créer un compte"),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -87,16 +90,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
               emailController: _emailController,
               passwordController: _passwordController,
               onSubmit: _createAccount,
-              ),
-              TextButton(
-                onPressed: () {
-                  GoRouter.of(context).goNamed("login");
-                },
-                child: const Text("Déjà un compte ?"),
+            ),
+            TextButton(
+              onPressed: () {
+                GoRouter.of(context).goNamed("login");
+              },
+              child: const Text("Déjà un compte ?"),
             ),
           ],
         ),
-        ),
-      );
+      ),
+    );
   }
 }
