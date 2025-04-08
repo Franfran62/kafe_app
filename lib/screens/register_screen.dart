@@ -78,26 +78,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text("Créer un compte"),
         automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            FormPlayer(
-              formKey: _formKey,
-              isRegister: true,
-              nameController: _nameController,
-              firstnameController: _firstnameController,
-              emailController: _emailController,
-              passwordController: _passwordController,
-              onSubmit: _createAccount,
-            ),
-            TextButton(
-              onPressed: () {
-                GoRouter.of(context).goNamed("login");
-              },
-              child: const Text("Déjà un compte ?"),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              FormPlayer(
+                formKey: _formKey,
+                isRegister: true,
+                nameController: _nameController,
+                firstnameController: _firstnameController,
+                emailController: _emailController,
+                passwordController: _passwordController,
+                onSubmit: _createAccount,
+              ),
+              TextButton(
+                onPressed: () {
+                  GoRouter.of(context).goNamed("login");
+                },
+                child: const Text("Déjà un compte ?"),
+              ),
+            ],
+          ),
         ),
       ),
     );

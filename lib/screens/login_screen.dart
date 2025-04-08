@@ -60,24 +60,26 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(title: const Text("Connexion"),
       automaticallyImplyLeading: false,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            FormPlayer(
-              formKey: _formKey,
-              isLogin: true,
-              emailController: _emailController,
-              passwordController: _passwordController,
-              onSubmit: _login,
-            ),
-        TextButton(
-              onPressed: () {
-                GoRouter.of(context).goNamed("register");
-              },
-              child: const Text("Pas encore de compte ?"),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              FormPlayer(
+                formKey: _formKey,
+                isLogin: true,
+                emailController: _emailController,
+                passwordController: _passwordController,
+                onSubmit: _login,
+              ),
+          TextButton(
+                onPressed: () {
+                  GoRouter.of(context).goNamed("register");
+                },
+                child: const Text("Pas encore de compte ?"),
+              ),
+            ],
+          ),
         ),
       ),
     );

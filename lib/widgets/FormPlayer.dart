@@ -42,15 +42,14 @@ class FormPlayer extends StatelessWidget {
           if (isEdit)
             Column(
               children: [
-                const Text("Avatar"),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () => onAvatarTap?.call(),
                   child: CircleAvatar(
                     radius: 30,
                     backgroundColor: Colors.grey[300],
                     backgroundImage: avatarUrl != null ? NetworkImage(avatarUrl!) : null,
-                    child: avatarUrl == null ? const Icon(Icons.person, size: 30) : null,
+                    child: avatarUrl == null ? const Icon(Icons.person, size: 50) : null,
                   ),
                 ),
                 const SizedBox(height: 20),
