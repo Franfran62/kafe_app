@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kafe_app/widgets/FormPlayer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -60,9 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
           await _firestore.updatePlayer(updatedPlayer);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Profil mis à jour avec succès")),
-          );
+          GoRouter.of(context).pushNamed("game_home");
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -72,31 +71,69 @@ class _AccountScreenState extends State<AccountScreen> {
     }
   }
 
+  // Ne fonctionnera pas ,car pas de compte payant coté firebase, donc pas de storage
   Future<void> _pickAndUploadAvatar() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final uid = FirebaseAuth.instance.currentUser?.uid;
 
-    if (pickedFile != null) {
-      final uid = FirebaseAuth.instance.currentUser?.uid;
-      final storageRef = FirebaseStorage.instance.ref().child('avatars/$uid.jpg');
-      await storageRef.putFile(File(pickedFile.path));
-      final downloadUrl = await storageRef.getDownloadURL();
-
-      await _firestore.updateAvatar(uid!, downloadUrl);
-      await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Avatar mis à jour")),
-      );
-
-      setState(() {}); 
-    }
+    showModalBottomSheet(
+      context: context,
+      builder: (_) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Prendre une photo'),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  final pickedFile = await picker.pickImage(source: ImageSource.camera);
+                  if (pickedFile != null) await _uploadToStorage(pickedFile, uid!);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choisir dans la galerie'),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                  if (pickedFile != null) await _uploadToStorage(pickedFile, uid!);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
+
+  Future<void> _uploadToStorage(XFile pickedFile, String uid) async {
+    final storageRef = FirebaseStorage.instance.ref().child('avatars/$uid.jpg');
+    await storageRef.putFile(File(pickedFile.path));
+    final downloadUrl = await storageRef.getDownloadURL();
+
+    await _firestore.updateAvatar(uid, downloadUrl);
+    await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Avatar mis à jour")),
+    );
+
+    setState(() {}); 
+    }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Mon profil")),
+      appBar: AppBar(title: const Text("Mon profil"),
+      leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              GoRouter.of(context).pushNamed("game_home");
+            },
+          ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

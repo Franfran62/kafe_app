@@ -51,7 +51,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: null,
+        automaticallyImplyLeading: false,
         title: Text(widget.title),
         actions: [
           PopupMenuButton<String>(
