@@ -2,19 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/game/game_asset.dart';
+import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/widgets/slot_item.dart';
+import 'package:provider/provider.dart';
 
 class FieldDetailScreen extends StatelessWidget {
-  final Field field;
+  final String fieldId;
 
-  const FieldDetailScreen({super.key, required this.field});
+  const FieldDetailScreen({super.key, required this.fieldId});
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<FieldProvider>();
+    final field = provider.findFieldById(fieldId);
+    if (field == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => Navigator.pop(context)),
-        title: Text(field.name),
+        title: Text("Gestion du champs"),
         actions: const [Icon(Icons.menu)], // TODO later
       ),
       body: SingleChildScrollView(

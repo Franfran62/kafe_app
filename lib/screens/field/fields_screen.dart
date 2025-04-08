@@ -59,7 +59,6 @@ class _FieldsScreenState extends State<FieldsScreen> {
                       GoRouter.of(context).pushNamed(
                         'field_detail',
                         pathParameters: {'id': field.id}, 
-                        extra: field, 
                       );
                     },
                     title: Text("${GameAsset.fieldEmoji}  ${field.name}"),

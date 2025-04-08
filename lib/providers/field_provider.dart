@@ -30,6 +30,14 @@ class FieldProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Field? findFieldById(String id) {
+    try {
+      return _fields.firstWhere((f) => f.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
   void clear() {
     _fields = [];
     notifyListeners();

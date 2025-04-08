@@ -39,10 +39,9 @@ final goRouter = GoRouter(
     GoRoute(
       name: "field_detail",
       path: '/field/:id',
-      builder: (context, state) {
-        final field = state.extra as Field;
-        return FieldDetailScreen(field: field);
-}
+      builder: (context, state) => FieldDetailScreen(
+        fieldId: state.pathParameters['id']!,
+      ),
 
 ),
   ],
