@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/providers/user_provider.dart';
 import 'package:kafe_app/router/router.dart';
-import 'package:kafe_app/theme.dart';
+import 'package:kafe_app/styles/theme.dart';
 import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
