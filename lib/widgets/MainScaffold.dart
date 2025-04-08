@@ -33,13 +33,13 @@ class _MainScaffoldState extends State<MainScaffold> {
     });
   }
 
-  void _onMenuSelected(String value) {
+  void _onMenuSelected(String value) async {
     switch (value) {
       case 'account':
         GoRouter.of(context).pushReplacementNamed("account");
         break;
       case 'logout':
-        FirebaseAuth.instance.signOut(); 
+        await FirebaseAuth.instance.signOut(); 
         GoRouter.of(context).pushReplacementNamed("login");
         break;
     }
