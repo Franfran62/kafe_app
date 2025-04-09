@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/providers/user_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/services/player_service.dart';
@@ -36,6 +37,7 @@ class AuthGameController {
     final uid = await _userService.getCurrentUserId();
     if (uid != null) {
       await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
+      await Provider.of<StockProvider>(context, listen: false).loadStock(uid);
       return true;
     }
     return false;

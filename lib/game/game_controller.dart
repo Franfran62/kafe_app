@@ -63,12 +63,11 @@ class GameController {
   }
 
   Future<void> harvestAndRefresh({required BuildContext context, required Field field, required int slotIndex}) async {
-    
     final player = context.read<PlayerProvider>().player;
     if (player == null) return;
 
     final slot = field.slots[slotIndex];
-    if (!slot.isPlanted || slot.harvested) return;
+    if (!slot.isPlanted) return;
 
     final growthDuration = slot.growthTime(field.specialty);
     final elapsed = DateTime.now().difference(slot.plantedAt!);
@@ -89,7 +88,7 @@ class GameController {
       weight *= GameConfig.yieldMultiplier;
     }
 
-    await _slotService.markSlotAsHarvested(field, slotIndex);
+    await _slotService.clearSlot(field, slotIndex);
     await _stockService.addFruit(player.uid, kafeType, weight);
     await context.read<FieldProvider>().reloadFields(player.uid);
   }

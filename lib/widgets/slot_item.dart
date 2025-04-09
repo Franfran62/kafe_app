@@ -88,7 +88,10 @@ class _SlotItemState extends State<SlotItem> {
         subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !"),
         trailing: Text(widget.slot.kafeType ?? ""),
         onTap: () {
-          // TODO: FieldService.harvest(widget.slot)
+          _gameController.harvestAndRefresh(
+            context: context, 
+            field: widget.field, 
+            slotIndex: widget.index);
         },
       ),
     );

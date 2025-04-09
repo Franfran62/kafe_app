@@ -12,7 +12,6 @@ class SlotService {
     final updatedSlot = slots[slotIndex].copyWith(
       kafeType: kafeType.name,
       plantedAt: DateTime.now(),
-      harvested: false,
     );
 
     final updatedSlots = [...slots];
@@ -23,9 +22,16 @@ class SlotService {
     });
   }
 
-  Future<void> markSlotAsHarvested(Field field, int slotIndex) async {
+  Future<void> clearSlot(Field field, int slotIndex) async {
+   final clearedSlot = field.slots[slotIndex].copyWith(
+    clearKafeType: true,
+    clearPlantedAt: true,
+  );
+
     final updatedSlots = [...field.slots];
-    updatedSlots[slotIndex] = updatedSlots[slotIndex].copyWith(harvested: true);
+    updatedSlots[slotIndex] = clearedSlot;
+    print(clearedSlot);
+    print(updatedSlots[slotIndex]);
 
     await _db.collection('fields').doc(field.id).update({
       'slots': updatedSlots.map((s) => s.toMap()).toList(),

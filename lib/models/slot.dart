@@ -5,13 +5,11 @@ class Slot {
   final String id;
   final String? kafeType;
   final DateTime? plantedAt;
-  final bool harvested;
 
   Slot({
     required this.id,
     this.kafeType,
     this.plantedAt,
-    this.harvested = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,7 +17,6 @@ class Slot {
       'id': id,
       'kafeType': kafeType,
       'plantedAt': plantedAt?.toIso8601String(),
-      'harvested': harvested,
     };
   }
 
@@ -28,17 +25,26 @@ class Slot {
       id: map['id'],
       kafeType: map['kafeType'],
       plantedAt: map['plantedAt'] != null ? DateTime.parse(map['plantedAt']) : null,
-      harvested: map['harvested'] ?? false,
     );
   }
 
-  Slot copyWith({String? id, String? kafeType, DateTime? plantedAt, bool? harvested}) {
+  Slot copyWith({
+    String? id,
+    String? kafeType,
+    bool clearKafeType = false,
+    DateTime? plantedAt,
+    bool clearPlantedAt = false,
+  }) {
     return Slot(
       id: id ?? this.id,
-      kafeType: kafeType ?? this.kafeType,
-      plantedAt: plantedAt ?? this.plantedAt,
-      harvested: harvested ?? this.harvested,
+      kafeType: clearKafeType ? null : kafeType ?? this.kafeType,
+      plantedAt: clearPlantedAt ? null : plantedAt ?? this.plantedAt,
     );
+  }
+
+  @override
+  String toString() {
+    return 'Slot(id: $id, kafeType: $kafeType, plantedAt: $plantedAt)';
   }
 }
 
