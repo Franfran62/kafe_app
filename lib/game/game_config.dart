@@ -58,6 +58,9 @@ class GameConfig {
   // Drying
   // -------------------------
 
+  // ratio de perte
+  static const double dryingLossRatio = 0.0458;
+
   // Statistique Kafé
   static Map<String, int> gato(KafeType type) => gatoStats[type]!;
   static final Map<KafeType, Map<String, int>> gatoStats = {

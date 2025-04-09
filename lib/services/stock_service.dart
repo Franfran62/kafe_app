@@ -45,4 +45,24 @@ class StockService {
       'deevee': newAmount,
     });
   }
+
+  Future<void> removeFruit(String playerId, KafeType type, double amount) async {
+    final docRef = _db.collection('stocks').doc(playerId);
+    final doc = await docRef.get();
+    final fruits = Map<String, dynamic>.from(doc.data()!["fruits"]);
+    final current = (fruits[type.name] as num).toDouble();
+    fruits[type.name] = (current - amount).clamp(0, double.infinity);
+
+    await docRef.update({"fruits": fruits});
+  }
+
+  Future<void> addGrain(String playerId, KafeType type, double amount) async {
+    final docRef = _db.collection('stocks').doc(playerId);
+    final doc = await docRef.get();
+    final grains = Map<String, dynamic>.from(doc.data()!["grains"]);
+    final current = (grains[type.name] as num?)?.toDouble() ?? 0.0;
+    grains[type.name] = current + amount;
+
+    await docRef.set({"grains": grains}, SetOptions(merge: true));
+  }
 }

@@ -102,4 +102,15 @@ class GameController {
       timeRatio: ratio,
     );
   }
+
+  Future<void> dryFruit({ required BuildContext context, required KafeType type, required double amount}) async {
+    final player = context.read<PlayerProvider>().player;
+    if (player == null) return;
+
+    final driedAmount = amount * (1 - GameConfig.dryingLossRatio);
+    
+    await context.read<StockProvider>().removeFruit(player.uid, type, amount);
+    await context.read<StockProvider>().addGrain(player.uid, type, driedAmount);
+
+  }
 }

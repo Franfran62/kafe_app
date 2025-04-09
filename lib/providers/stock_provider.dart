@@ -17,7 +17,6 @@ class StockProvider extends ChangeNotifier {
 
   Future<void> decrementDeevee(String playerId, int amount) async {
     if (_stock == null) return;
-
     final newDeevee = _stock!.deevee - amount;
     _stock = _stock!.copyWith(deevee: newDeevee);
     await _stockService.updateDeevee(playerId, newDeevee);
@@ -27,6 +26,16 @@ class StockProvider extends ChangeNotifier {
 
   Future<void> addFruit(String playerId, KafeType type, double amount) async {
     await _stockService.addFruit(playerId, type, amount);
+    await loadStock(playerId);
+  }
+
+  Future<void> removeFruit(String playerId, KafeType type, double amount) async {
+    await _stockService.removeFruit(playerId, type, amount);
+    await loadStock(playerId);
+  }
+
+  Future<void> addGrain(String playerId, KafeType type, double amount) async {
+    await _stockService.addGrain(playerId, type, amount);
     await loadStock(playerId);
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/screens/blend/blend_screen.dart';
 import 'package:kafe_app/screens/contest/contest_screen.dart';
-import 'package:kafe_app/screens/contest/drying_screen.dart';
+import 'package:kafe_app/screens/drying/drying_screen.dart';
 import 'package:kafe_app/screens/field/fields_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
