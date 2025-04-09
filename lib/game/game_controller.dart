@@ -12,12 +12,15 @@ import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/services/player_service.dart';
 import 'package:kafe_app/services/slot_service.dart';
+import 'package:kafe_app/services/stock_service.dart';
 import 'package:provider/provider.dart';
 
 class GameController {
+
   final FieldService _fieldService = FieldService();
   final PlayerService _playerService = PlayerService();
   final SlotService _slotService = SlotService();
+  final StockService _stockService = StockService();
 
   Future<void> purchaseField({required BuildContext context, required String fieldName}) async {
     final player = context.read<PlayerProvider>().player;
@@ -87,15 +90,14 @@ class GameController {
       penalty = GameConfig.harvestLowPenalty;
     }
 
-    double weight = GameConfig.fruitWeight(KafeTypeExtension.fromString(slot.kafeType!)) * penalty;
+    final kafeType = KafeTypeExtension.fromString(slot.kafeType!);
+    double weight = GameConfig.fruitWeight(kafeType) * penalty;
     if (field.specialty == FieldSpecialty.yieldDouble) {
       weight *= GameConfig.yieldMultiplier;
     }
 
     await _slotService.markSlotAsHarvested(field, slotIndex);
-
-    // TODO: Ajouter `weight` au stock du joueur via InventoryService (plus tard)
-
+    await _stockService.addFruit(player.uid, kafeType, weight);
     await context.read<FieldProvider>().reloadFields(player.uid);
   }
 }
