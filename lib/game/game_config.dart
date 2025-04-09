@@ -19,7 +19,7 @@ class GameConfig {
   // Harvest
   // -------------------------
 
-  // Perte de rendement si récolte tardive
+  // Pénalité de récolte
   static const double harvestHardPenalty = 0.2;
   static const double harvestMediumPenalty = 0.5;
   static const double harvestLowPenalty = 0.8;
