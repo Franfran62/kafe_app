@@ -28,6 +28,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   final PlayerService _playerService = PlayerService();
   final AuthGameController _authGameController = AuthGameController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -44,6 +45,7 @@ class _AccountScreenState extends State<AccountScreen> {
 
   Future<void> editAccount() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
       try {
         await _authGameController.updateProfileFlow(
           context: context, 
@@ -57,6 +59,8 @@ class _AccountScreenState extends State<AccountScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.toString()}")),
         );
+      } finally {
+        if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -130,7 +134,9 @@ class _AccountScreenState extends State<AccountScreen> {
           },
         ),
       ),
-      body: Padding(
+      body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [

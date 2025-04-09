@@ -25,9 +25,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _passwordController = TextEditingController();
 
   final AuthGameController _authController = AuthGameController();
+  bool _isLoading = false;
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
       try {
         final fieldName = await showFieldNameModal(context, isFirst: true);
         if (fieldName == null) {
@@ -46,6 +48,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.toString()}")),
         );
+      } finally {
+      if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -68,7 +72,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         title: const Text("Créer un compte"),
         automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+        ? const Center(child: CircularProgressIndicator())
+        : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(

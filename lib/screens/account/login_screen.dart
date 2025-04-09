@@ -19,6 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
 
   final AuthGameController _authGameController = AuthGameController();
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
       try {
         final logged = await _authGameController.loginFlow(
           context: context,
@@ -46,6 +48,8 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.message}")),
         );
+      } finally {
+      if (mounted) setState(() => _isLoading = false);
       }
     }
   }
@@ -56,7 +60,9 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(title: const Text("Connexion"),
       automaticallyImplyLeading: false,
       ),
-      body: SingleChildScrollView(
+      body: _isLoading
+      ? const Center(child: CircularProgressIndicator())
+      : SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
