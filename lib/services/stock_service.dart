@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
 import 'package:kafe_app/models/stock.dart';
+import 'package:kafe_app/services/helper/round_double.dart';
 
 class StockService {
   final _db = FirebaseFirestore.instance;
@@ -35,7 +36,8 @@ class StockService {
     }
 
     final current = (fruits[type.name] as num?)?.toDouble() ?? 0.0;
-    fruits[type.name] = current + amount;
+    fruits[type.name] = roundDouble(current + amount);
+
 
     await docRef.set({'fruits': fruits}, SetOptions(merge: true));
   }
@@ -51,7 +53,7 @@ class StockService {
     final doc = await docRef.get();
     final fruits = Map<String, dynamic>.from(doc.data()!["fruits"]);
     final current = (fruits[type.name] as num).toDouble();
-    fruits[type.name] = (current - amount).clamp(0, double.infinity);
+    fruits[type.name] = roundDouble((current - amount).clamp(0, double.infinity));
 
     await docRef.update({"fruits": fruits});
   }
@@ -61,8 +63,19 @@ class StockService {
     final doc = await docRef.get();
     final grains = Map<String, dynamic>.from(doc.data()!["grains"]);
     final current = (grains[type.name] as num?)?.toDouble() ?? 0.0;
-    grains[type.name] = current + amount;
+    grains[type.name] = roundDouble(current + amount);
 
     await docRef.set({"grains": grains}, SetOptions(merge: true));
+  }
+
+  Future<void> removeGrain(String playerId, KafeType type, double amount) async {
+    final docRef = _db.collection('stocks').doc(playerId);
+    final doc = await docRef.get();
+    final grains = Map<String, dynamic>.from(doc.data()!["grains"]);
+    final current = (grains[type.name] as num).toDouble();
+    grains[type.name] = roundDouble((current - amount).clamp(0, double.infinity));
+
+
+    await docRef.update({"grains": grains});
   }
 }

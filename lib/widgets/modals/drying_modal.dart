@@ -85,7 +85,7 @@ Future<double?> showDryingModal({
                           final input = double.tryParse(
                                   controller.text.replaceAll(',', '.')) ??
                               0;
-                          if (input > 0 && input <= availableAmount) {
+                          if (input > 0 && input <= (availableAmount +1)) {
                             Navigator.of(context).pop(input);
                           }
                         },

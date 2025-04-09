@@ -38,4 +38,9 @@ class StockProvider extends ChangeNotifier {
     await _stockService.addGrain(playerId, type, amount);
     await loadStock(playerId);
   }
+
+  Future<void> removeGrain(String playerId, KafeType type, double amount) async {
+    await _stockService.removeGrain(playerId, type, amount);
+    await loadStock(playerId);
+  }
 }
