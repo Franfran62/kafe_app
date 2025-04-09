@@ -12,12 +12,12 @@ class FieldService {
 
   final _db = FirebaseFirestore.instance;
 
-  Future<void> createInitialField(String playerId, String fieldName) async {
+  Future<void> createInitialField(String playerId, int slotsPerFields, String fieldName) async {
     final specialties = FieldSpecialty.values;
     final random = Random();
     final specialty = specialties[random.nextInt(specialties.length)];
     final doc = _db.collection('fields').doc();
-    final slots = List.generate(4, (i) => Slot(id: '${doc.id}_$i'));
+    final slots = List.generate(slotsPerFields, (i) => Slot(id: '${doc.id}_$i'));
     final field = Field(
       id: doc.id,
       name: fieldName,

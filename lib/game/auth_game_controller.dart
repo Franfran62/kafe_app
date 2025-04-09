@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/providers/user_provider.dart';
@@ -26,7 +27,7 @@ class AuthGameController {
       email: email,
     ));
     await _stockService.initStock(uid);
-    await _fieldService.createInitialField(uid, fieldName);
+    await _fieldService.createInitialField(uid,  GameConfig.slotsPerField, fieldName);
     return await loginFlow(context: context, email: email, password: password);
   }
 
