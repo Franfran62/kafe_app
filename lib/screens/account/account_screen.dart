@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kafe_app/game/auth_game_controller.dart';
 import 'package:kafe_app/widgets/form_player.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kafe_app/models/player.dart';
@@ -26,6 +27,7 @@ class _AccountScreenState extends State<AccountScreen> {
   final _firstnameController = TextEditingController();
 
   final PlayerService _playerService = PlayerService();
+  final AuthGameController _authGameController = AuthGameController();
 
   @override
   void initState() {
@@ -35,34 +37,22 @@ class _AccountScreenState extends State<AccountScreen> {
       _nameController.text = player.name;
       _firstnameController.text = player.firstname;
       _emailController.text = player.email;
+    } else {
+      GoRouter.of(context).pushNamed("login");
     }
   }
 
   Future<void> editAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final playerProvider =
-            Provider.of<PlayerProvider>(context, listen: false);
-        final existingPlayer = playerProvider.player;
-
-        if (existingPlayer != null && existingPlayer.uid.isNotEmpty) {
-          final updatedPlayer = Player(
-            uid: existingPlayer.uid,
-            name: _nameController.text.trim().isNotEmpty
-                ? _nameController.text.trim()
-                : existingPlayer.name,
-            firstname: _firstnameController.text.trim().isNotEmpty
-                ? _firstnameController.text.trim()
-                : existingPlayer.firstname,
-            email: _emailController.text.trim().isNotEmpty
-                ? _emailController.text.trim()
-                : existingPlayer.email,
-          );
-
-          await _playerService.updatePlayer(updatedPlayer);
-
-          GoRouter.of(context).pushNamed("game_home");
-        }
+        await _authGameController.updateProfileFlow(
+          context: context, 
+          email: _emailController.text.trim(), 
+          password: _passwordController.text.trim(), 
+          name: _nameController.text.trim(),
+          firstname: _firstnameController.text.trim(),  
+        );
+        GoRouter.of(context).pushNamed("game_home");
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.toString()}")),
@@ -74,7 +64,6 @@ class _AccountScreenState extends State<AccountScreen> {
   // Ne fonctionnera pas ,car pas de compte payant coté firebase, donc pas de storage
   Future<void> _pickAndUploadAvatar() async {
     final picker = ImagePicker();
-    final uid = FirebaseAuth.instance.currentUser?.uid;
 
     showModalBottomSheet(
       context: context,
@@ -90,8 +79,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   Navigator.of(context).pop();
                   final pickedFile =
                       await picker.pickImage(source: ImageSource.camera);
-                  if (pickedFile != null)
-                    await _uploadToStorage(pickedFile, uid!);
+                  if (pickedFile != null) {
+                    await _authGameController.updateAvatar(
+                      context: context,
+                      file: File(pickedFile.path),
+                    );
+                    _showSnackAndRefresh();
+                  }
                 },
               ),
               ListTile(
@@ -101,8 +95,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   Navigator.of(context).pop();
                   final pickedFile =
                       await picker.pickImage(source: ImageSource.gallery);
-                  if (pickedFile != null)
-                    await _uploadToStorage(pickedFile, uid!);
+                  if (pickedFile != null) {
+                    await _authGameController.updateAvatar(
+                      context: context,
+                      file: File(pickedFile.path),
+                    );
+                    _showSnackAndRefresh();
+                  }
                 },
               ),
             ],
@@ -112,18 +111,10 @@ class _AccountScreenState extends State<AccountScreen> {
     );
   }
 
-  Future<void> _uploadToStorage(XFile pickedFile, String uid) async {
-    final storageRef = FirebaseStorage.instance.ref().child('avatars/$uid.jpg');
-    await storageRef.putFile(File(pickedFile.path));
-    final downloadUrl = await storageRef.getDownloadURL();
-
-    await _playerService.updateAvatar(uid, downloadUrl);
-    await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
-
+  void _showSnackAndRefresh() {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Avatar mis à jour")),
     );
-
     setState(() {});
   }
 

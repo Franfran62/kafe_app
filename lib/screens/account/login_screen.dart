@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kafe_app/game/auth_game_controller.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/widgets/form_player.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +15,10 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final _auth = FirebaseAuth.instance;
+  final AuthGameController _authGameController = AuthGameController();
 
   @override
   void initState() {
@@ -34,18 +34,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await _auth.signInWithEmailAndPassword(
+        final logged = await _authGameController.loginFlow(
+          context: context,
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
         );
-        final uid = FirebaseAuth.instance.currentUser?.uid;
-        if (uid != null) {
-          await Provider.of<PlayerProvider>(context, listen: false).loadPlayer(uid);
-        }
-        if (mounted) {
+        if (mounted && logged) {
           GoRouter.of(context).pushNamed('game_home');
         }
-
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Erreur : ${e.message}")),

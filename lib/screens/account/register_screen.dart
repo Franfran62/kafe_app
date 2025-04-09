@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kafe_app/game/auth_game_controller.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/widgets/field_name_modal.dart';
@@ -23,39 +24,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final PlayerService _playerService = PlayerService();
-  final FieldService _fieldService = FieldService();
+  final AuthGameController _authController = AuthGameController();
 
   Future<void> _createAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final userCredential = await _auth.createUserWithEmailAndPassword(
+        final fieldName = await showFieldNameModal(context, isFirst: true);
+        if (fieldName == null) {
+          return;
+        }
+        await _authController.registerFlow(
+          context: context,
           email: _emailController.text.trim(),
           password: _passwordController.text.trim(),
-        );
-
-        final player = Player(
-          uid: userCredential.user!.uid,
           name: _nameController.text.trim(),
           firstname: _firstnameController.text.trim(),
-          email: _emailController.text.trim(),
+          fieldName: fieldName,
         );
-
-        final uid = FirebaseAuth.instance.currentUser?.uid;
-        if (uid != null) {
-          await Provider.of<PlayerProvider>(context, listen: false)
-              .loadPlayer(uid);
-        }
-
-        final fieldName = await showFieldNameModal(context, isFirst: true) ?? "Champ #1";
-        await _playerService.createPlayer(player);
-        await _fieldService.createInitialField(player.uid, fieldName);
-
-        GoRouter.of(context).pushNamed('login');
-      } on FirebaseAuthException catch (e) {
+        GoRouter.of(context).pushNamed("game_home"); 
+      } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur : ${e.message}")),
+          SnackBar(content: Text("Erreur : ${e.toString()}")),
         );
       }
     }

@@ -5,6 +5,16 @@ import 'package:kafe_app/models/stock.dart';
 class StockService {
   final _db = FirebaseFirestore.instance;
 
+  Future<void> initStock(String playerId) async {
+    final initial = Stock(
+      fruits: {},
+      grains: {},
+      deevee: 10,
+      goldGrains: 0,
+    );
+    await _db.collection('stocks').doc(playerId).set(initial.toMap());
+  }
+
   Future<Stock> getStock(String playerId) async {
     final doc = await _db.collection('stocks').doc(playerId).get();
     if (!doc.exists) {
