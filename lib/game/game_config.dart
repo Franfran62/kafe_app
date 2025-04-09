@@ -20,7 +20,9 @@ class GameConfig {
   // -------------------------
 
   // Perte de rendement si récolte tardive
-  static const double lateHarvestPenalty = 0.5;
+  static const double harvestHardPenalty = 0.2;
+  static const double harvestMediumPenalty = 0.5;
+  static const double harvestLowPenalty = 0.8;
   // Temps de récolte
   static Duration growthTimeFor(String type) {
     final kafe = KafeTypeExtension.fromString(type);

@@ -6,15 +6,18 @@ import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/models/player.dart';
+import 'package:kafe_app/models/slot.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/services/player_service.dart';
+import 'package:kafe_app/services/slot_service.dart';
 import 'package:provider/provider.dart';
 
 class GameController {
   final FieldService _fieldService = FieldService();
   final PlayerService _playerService = PlayerService();
+  final SlotService _slotService = SlotService();
 
   Future<void> purchaseField({required BuildContext context, required String fieldName}) async {
     final player = context.read<PlayerProvider>().player;
@@ -53,7 +56,7 @@ class GameController {
     }
 
     await _playerService.decrementDeevee(player, cost);
-    await _fieldService.updateSlot(
+    await _slotService.updateSlot(
       field: field,
       slotIndex: slotIndex,
       kafeType: kafeType,
@@ -61,5 +64,38 @@ class GameController {
 
     await context.read<FieldProvider>().reloadFields(player.uid);
     await context.read<PlayerProvider>().loadPlayer(player.uid);
+  }
+
+  Future<void> harvestAndRefresh({required BuildContext context, required Field field, required int slotIndex}) async {
+    
+    final player = context.read<PlayerProvider>().player;
+    if (player == null) return;
+
+    final slot = field.slots[slotIndex];
+    if (!slot.isPlanted || slot.harvested) return;
+
+    final growthDuration = slot.growthTime(field.specialty);
+    final elapsed = DateTime.now().difference(slot.plantedAt!);
+    final ratio = elapsed.inSeconds / growthDuration.inSeconds;
+
+    double penalty = 1.0;
+    if (ratio > 5) {
+      penalty = GameConfig.harvestHardPenalty;
+    } else if (ratio > 3) {
+      penalty = GameConfig.harvestMediumPenalty;
+    } else if (ratio > 1) {
+      penalty = GameConfig.harvestLowPenalty;
+    }
+
+    double weight = GameConfig.fruitWeight(KafeTypeExtension.fromString(slot.kafeType!)) * penalty;
+    if (field.specialty == FieldSpecialty.yieldDouble) {
+      weight *= GameConfig.yieldMultiplier;
+    }
+
+    await _slotService.markSlotAsHarvested(field, slotIndex);
+
+    // TODO: Ajouter `weight` au stock du joueur via InventoryService (plus tard)
+
+    await context.read<FieldProvider>().reloadFields(player.uid);
   }
 }
