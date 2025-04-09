@@ -5,8 +5,6 @@ class Player {
   final String firstname;
   final String email;
   final String? avatarUrl;
-  final int deevee;
-  final int gold;
 
   Player({
     required this.uid,
@@ -14,8 +12,6 @@ class Player {
     required this.firstname,
     required this.email,
     this.avatarUrl,
-    this.deevee = 10,
-    this.gold = 0,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,8 +21,6 @@ class Player {
       'firstname': firstname,
       'email': email,
       'avatarUrl': avatarUrl,
-      'deevee': deevee,
-      'gold': gold,
     };
   }
 
@@ -37,8 +31,6 @@ class Player {
       firstname: map['firstname'],
       email: map['email'],
       avatarUrl: map['avatarUrl'],
-      deevee: map['deevee'],
-      gold: map['gold'],
     );
   }
 
@@ -56,8 +48,6 @@ class Player {
       name: name ?? this.name,
       firstname: firstname ?? this.firstname,
       email: email ?? this.email,
-      deevee: deevee ?? this.deevee,
-      gold: gold ?? this.gold,
       avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
-import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/game/game_asset.dart';
+import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:provider/provider.dart';
 
 Future<KafeType?> showPlantingModal(BuildContext context) async {
 
-  final player = context.read<PlayerProvider>().player!;
+  final stock = context.read<StockProvider>().stock!;
 
   return await showModalBottomSheet<KafeType>(
     context: context,
@@ -35,7 +35,7 @@ Future<KafeType?> showPlantingModal(BuildContext context) async {
               final cost = GameConfig.costFor(type);
               final time = GameConfig.growthTimes[type]!;
               final duration = _formatDuration(time);
-              final canAfford = player.deevee >= cost;
+              final canAfford = stock.deevee >= cost;
 
               return Card(
                 shape: RoundedRectangleBorder(

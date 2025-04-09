@@ -9,6 +9,7 @@ import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/models/slot.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/services/player_service.dart';
 import 'package:kafe_app/services/slot_service.dart';
@@ -23,19 +24,16 @@ class GameController {
   final StockService _stockService = StockService();
 
   Future<void> purchaseField({required BuildContext context, required String fieldName}) async {
+
     final player = context.read<PlayerProvider>().player;
-    if (player == null) {
-      return;
-    }
-    if (player.deevee < GameConfig.fieldPurchaseCost) {
-      return;
-    }
+    final stock = context.read<StockProvider>().stock;
+    if (stock == null || player == null || stock.deevee < GameConfig.fieldPurchaseCost) return;
 
     final specialty = FieldSpecialty.values[
       Random().nextInt(FieldSpecialty.values.length)
     ];
 
-    await _playerService.decrementDeevee(player, GameConfig.fieldPurchaseCost);
+    await context.read<StockProvider>().decrementDeevee(player.uid, GameConfig.fieldPurchaseCost);
     await _fieldService.createField(
       playerId: player.uid,
       fieldName: fieldName,
@@ -49,16 +47,11 @@ class GameController {
   Future<void> plantAndRefresh({required BuildContext context, required Field field, required int slotIndex, required KafeType kafeType,
   }) async {
     final player = context.read<PlayerProvider>().player;
-    if (player == null) {
-      return;
-    }
-
+    final stock = context.read<StockProvider>().stock;
     final cost = GameConfig.costFor(kafeType);
-    if (player.deevee < cost) {
-      return;
-    }
+    if (stock == null || player == null || stock.deevee < cost) return;
 
-    await _playerService.decrementDeevee(player, cost);
+    await context.read<StockProvider>().decrementDeevee(player.uid, GameConfig.fieldPurchaseCost);
     await _slotService.updateSlot(
       field: field,
       slotIndex: slotIndex,

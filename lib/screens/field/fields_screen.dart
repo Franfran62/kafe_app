@@ -6,6 +6,7 @@ import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/game/game_config.dart';
+import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/game/game_asset.dart';
 import 'package:kafe_app/widgets/field_name_modal.dart';
@@ -34,9 +35,10 @@ class _FieldsScreenState extends State<FieldsScreen> {
   @override
   Widget build(BuildContext context) {
     final fieldProvider = context.watch<FieldProvider>();
-    final player = context.watch<PlayerProvider>().player;
+    final player = context.read<PlayerProvider>().player;
+    final stock = context.read<StockProvider>().stock;
 
-    if (fieldProvider.isLoading || player == null) {
+    if (fieldProvider.isLoading || player == null || stock == null) {
       return const Center(child: CircularProgressIndicator());
     }
     final fields = fieldProvider.fields;
@@ -70,7 +72,7 @@ class _FieldsScreenState extends State<FieldsScreen> {
             const SizedBox(height: 24),
             Center(
               child: ElevatedButton.icon(
-                onPressed: player.deevee >= GameConfig.fieldPurchaseCost
+                onPressed: stock.deevee >= GameConfig.fieldPurchaseCost
                     ? () async {
                         final name = await showFieldNameModal(context);
                         if (name == null) return;

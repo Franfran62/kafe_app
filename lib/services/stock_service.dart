@@ -39,4 +39,10 @@ class StockService {
 
     await docRef.set({'fruits': fruits}, SetOptions(merge: true));
   }
+
+  Future<void> updateDeevee(String playerId, int newAmount) async {
+    await _db.collection('stocks').doc(playerId).update({
+      'deevee': newAmount,
+    });
+  }
 }
