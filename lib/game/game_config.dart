@@ -7,7 +7,7 @@ class GameConfig {
   // -------------------------
 
   // Cout d'achat d'un champ
-  static const int fieldPurchaseCost = 1;
+  static const int fieldPurchaseCost = 15;
   // Nombre de slots par champ
   static const int slotsPerField = 4;
   // Multiplieur de rendement pour champ spécialisé
