@@ -62,7 +62,7 @@ class _SlotItemState extends State<SlotItem> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: ListTile(
-        title: Text("Slot ${widget.index + 1}"),
+        title: Text("Emplacement ${widget.index + 1}"),
         subtitle: const Text("${GameAsset.slotEmptyEmoji} Planter un fruit"),
         trailing: const Icon(Icons.add),
         onTap: () async {
@@ -85,7 +85,7 @@ class _SlotItemState extends State<SlotItem> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: ListTile(
-        title: Text("Slot ${widget.index + 1}"),
+        title: Text("Emplacement ${widget.index + 1}"),
         subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !"),
         trailing: Text(widget.slot.kafeType ?? ""),
         onTap: () async {
@@ -110,7 +110,7 @@ class _SlotItemState extends State<SlotItem> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
       child: ListTile(
-        title: Text("Slot ${widget.index + 1}"),
+        title: Text("Emplacement ${widget.index + 1}"),
         subtitle: Text("${GameAsset.slotPlantEmoji} Temps restant : $formatted"),
         trailing: Text(widget.slot.kafeType ?? ""),
       ),
