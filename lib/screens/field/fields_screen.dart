@@ -9,7 +9,7 @@ import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/game/game_asset.dart';
-import 'package:kafe_app/widgets/field_name_modal.dart';
+import 'package:kafe_app/widgets/modals/field_name_modal.dart';
 import 'package:provider/provider.dart';
 
 class FieldsScreen extends StatefulWidget {

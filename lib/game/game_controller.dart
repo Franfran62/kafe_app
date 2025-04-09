@@ -7,6 +7,7 @@ import 'package:kafe_app/models/enums/kafe_type.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/models/slot.dart';
+import 'package:kafe_app/models/wrapper/harvest_result.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/providers/stock_provider.dart';
@@ -62,24 +63,26 @@ class GameController {
     await context.read<PlayerProvider>().loadPlayer(player.uid);
   }
 
-  Future<void> harvestAndRefresh({required BuildContext context, required Field field, required int slotIndex}) async {
+  Future<HarvestResult?> harvestAndRefresh({required BuildContext context, required Field field, required int slotIndex}) async {
     final player = context.read<PlayerProvider>().player;
-    if (player == null) return;
+    if (player == null) return null;
 
     final slot = field.slots[slotIndex];
-    if (!slot.isPlanted) return;
+    if (!slot.isPlanted) return null;
 
     final growthDuration = slot.growthTime(field.specialty);
     final elapsed = DateTime.now().difference(slot.plantedAt!);
-    final ratio = elapsed.inSeconds / growthDuration.inSeconds;
-
-    double penalty = 1.0;
-    if (ratio > 5) {
-      penalty = GameConfig.harvestHardPenalty;
-    } else if (ratio > 3) {
-      penalty = GameConfig.harvestMediumPenalty;
-    } else if (ratio > 1) {
+    final ratio = (elapsed.inSeconds - growthDuration.inSeconds) / growthDuration.inSeconds;
+    print(ratio);
+    double penalty;
+    if (ratio <= 1.0) {
+      penalty = 1.0;
+    } else if (ratio <= 3.0) {
       penalty = GameConfig.harvestLowPenalty;
+    } else if (ratio <= 5.0) {
+      penalty = GameConfig.harvestMediumPenalty;
+    } else {
+      penalty = GameConfig.harvestHardPenalty;
     }
 
     final kafeType = KafeTypeExtension.fromString(slot.kafeType!);
@@ -91,5 +94,12 @@ class GameController {
     await _slotService.clearSlot(field, slotIndex);
     await _stockService.addFruit(player.uid, kafeType, weight);
     await context.read<FieldProvider>().reloadFields(player.uid);
+
+    return HarvestResult(
+      type: kafeType,
+      weight: weight,
+      penalty: penalty,
+      timeRatio: ratio,
+    );
   }
 }

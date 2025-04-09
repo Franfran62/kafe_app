@@ -10,7 +10,8 @@ import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/screens/field/field_detail_screen.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/game/game_asset.dart';
-import 'package:kafe_app/widgets/planting_modal.dart';
+import 'package:kafe_app/widgets/modals/harvest_modal.dart';
+import 'package:kafe_app/widgets/modals/planting_modal.dart';
 import 'package:provider/provider.dart';
 
 class SlotItem extends StatefulWidget {
@@ -87,11 +88,15 @@ class _SlotItemState extends State<SlotItem> {
         title: Text("Slot ${widget.index + 1}"),
         subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !"),
         trailing: Text(widget.slot.kafeType ?? ""),
-        onTap: () {
-          _gameController.harvestAndRefresh(
+        onTap: () async {
+          final result = await _gameController.harvestAndRefresh(
             context: context, 
             field: widget.field, 
-            slotIndex: widget.index);
+            slotIndex: widget.index
+          );
+          if (result != null) {
+            await showHarvestResultDialog(context, result);
+          }
         },
       ),
     );

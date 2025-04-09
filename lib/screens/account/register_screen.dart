@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kafe_app/game/auth_game_controller.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/field_service.dart';
-import 'package:kafe_app/widgets/field_name_modal.dart';
+import 'package:kafe_app/widgets/modals/field_name_modal.dart';
 import 'package:kafe_app/widgets/form_player.dart';
 import 'package:provider/provider.dart';
 import '../../models/player.dart';
