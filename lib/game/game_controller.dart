@@ -73,7 +73,7 @@ class GameController {
     final growthDuration = slot.growthTime(field.specialty);
     final elapsed = DateTime.now().difference(slot.plantedAt!);
     final ratio = (elapsed.inSeconds - growthDuration.inSeconds) / growthDuration.inSeconds;
-    print(ratio);
+
     double penalty;
     if (ratio <= 1.0) {
       penalty = 1.0;
