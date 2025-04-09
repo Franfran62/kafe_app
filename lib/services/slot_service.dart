@@ -30,8 +30,6 @@ class SlotService {
 
     final updatedSlots = [...field.slots];
     updatedSlots[slotIndex] = clearedSlot;
-    print(clearedSlot);
-    print(updatedSlots[slotIndex]);
 
     await _db.collection('fields').doc(field.id).update({
       'slots': updatedSlots.map((s) => s.toMap()).toList(),
