@@ -66,7 +66,7 @@ class _BlendScreenState extends State<BlendScreen> {
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             children: [
-              const SizedBox(height: 8),
+              Padding(padding: const EdgeInsets.only(top: 8)),
               ...grains.entries.where((e) => e.value > 0).map((entry) {
                 final type = entry.key;
                 final available = entry.value;
@@ -91,31 +91,35 @@ class _BlendScreenState extends State<BlendScreen> {
                   ],
                 );
               }),
-              const SizedBox(height: 8),
-              Center(
-                child: Text(
-                  "Poids total (kg) : ${totalSelectedWeight.toStringAsFixed(2)}",
-                  style: Theme.of(context).textTheme.titleMedium,
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Center(
+                  child: Text(
+                    "Poids total (kg) : ${totalSelectedWeight.toStringAsFixed(2)}",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              Center(
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.coffee),
-                  label: const Text("Assembler"),
-                  onPressed: totalSelectedWeight >= 1
-                      ? () async {
-                          await GameController().createBlend(
-                            context: context,
-                            selectedGrains: _selection,
-                          );
+                ),
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Center(
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.coffee),
+                    label: const Text("Assembler"),
+                    onPressed: totalSelectedWeight >= 1
+                        ? () async {
+                            await GameController().createBlend(
+                              context: context,
+                              selectedGrains: _selection,
+                            );
 
-                          if (mounted) {
-                            await showBlendResultModal(context);
-                            setState(() => _selection.clear());
+                            if (mounted) {
+                              await showBlendResultModal(context);
+                              setState(() => _selection.clear());
+                            }
                           }
-                        }
-                      : null,
+                        : null,
+                  ),
                 ),
               ),
             ],
