@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
     final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser != null) {
+    if (currentUser == null) {
       Future.microtask(() {
         GoRouter.of(context).pushReplacementNamed('game_home');
       });
