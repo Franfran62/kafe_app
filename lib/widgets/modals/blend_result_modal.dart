@@ -2,11 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_asset.dart';
 import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/blend.dart';
+import 'package:kafe_app/providers/player_provider.dart';
+import 'package:kafe_app/services/contest_service.dart';
 import 'package:kafe_app/services/helper/clean_double.dart';
+import 'package:provider/provider.dart';
 
 Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
 
   final GameController _gameController = GameController();
+  final player = context.read<PlayerProvider>().player;
+
+  bool alreadySubmitted = false;
+  if (player != null) {
+    final contestService = ContestService();
+    final submission = await contestService.getSubmission(player.uid);
+    alreadySubmitted = submission != null;
+  }
 
   await showModalBottomSheet(
     context: context,
@@ -64,8 +75,8 @@ Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
                   Center(
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.emoji_events),
-                      label: Text("Soumettre au concours"),
-                      onPressed: () async {
+                      label: Text(alreadySubmitted ? "Déjà soumis" : "Soumettre au concours"),
+                      onPressed: alreadySubmitted ? null : () async {
                         _gameController.submitBlendToContest(context: context, blend: blend);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
