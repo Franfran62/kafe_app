@@ -66,6 +66,9 @@ class GameConfig {
   // Blend
   // --------------------------
 
+
+  // Prix de vente
+  static int blendSellPrice = 3;
   // Les GATO
   static List<String> gatoList() => [
     'gout',

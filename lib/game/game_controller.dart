@@ -13,7 +13,6 @@ import 'package:kafe_app/models/wrapper/harvest_result.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/providers/stock_provider.dart';
-import 'package:kafe_app/services/blend_service.dart';
 import 'package:kafe_app/services/field_service.dart';
 import 'package:kafe_app/services/player_service.dart';
 import 'package:kafe_app/services/slot_service.dart';
@@ -117,51 +116,61 @@ class GameController {
     await context.read<StockProvider>().addGrain(player.uid, type, driedAmount);
   }
 
- Future<Blend?> createBlend({required BuildContext context, required Map<KafeType, double> selectedGrains}) async {
+  Future<Blend?> createBlend({required BuildContext context, required Map<KafeType, double> selectedGrains}) async {
   
-  final player = context.read<PlayerProvider>().player;
-  final stock = context.read<StockProvider>().stock;
-  if (player == null || stock == null) return null;
+    final player = context.read<PlayerProvider>().player;
+    final stock = context.read<StockProvider>().stock;
+    if (player == null || stock == null) return null;
 
-  double total = 0;
-  double gout = 0;
-  double amertume = 0;
-  double teneur = 0;
-  double odorat = 0;
+    double total = 0;
+    double gout = 0;
+    double amertume = 0;
+    double teneur = 0;
+    double odorat = 0;
 
-  for (var entry in selectedGrains.entries) {
-    final type = entry.key;
-    final amount = entry.value;
-    final stats = GameConfig.gato(type);
+    for (var entry in selectedGrains.entries) {
+      final type = entry.key;
+      final amount = entry.value;
+      final stats = GameConfig.gato(type);
 
-    total += amount;
-    gout += stats['gout']! * amount;
-    amertume += stats["amertume"]! * amount;
-    teneur += stats['teneur']! * amount;
-    odorat += stats['odorat']! * amount;
+      total += amount;
+      gout += stats['gout']! * amount;
+      amertume += stats["amertume"]! * amount;
+      teneur += stats['teneur']! * amount;
+      odorat += stats['odorat']! * amount;
+    }
+
+    final blend = Blend(
+      id: '',
+      ownerId: player.uid,
+      totalWeight: total,
+      stats: GatoStats(
+        gout: gout / total,
+        amertume: amertume / total,
+        teneur: teneur / total,
+        odorat: odorat / total,
+      ),
+      createdAt: DateTime.now(),
+      submitted: false,
+    );
+
+    for (var entry in selectedGrains.entries) {
+      await context.read<StockProvider>().removeGrain(player.uid, entry.key, entry.value);
+    }
+
+    await context.read<StockProvider>().loadStock(player.uid);
+
+    return blend;
   }
 
-  final blend = Blend(
-    id: '',
-    ownerId: player.uid,
-    totalWeight: total,
-    stats: GatoStats(
-      gout: gout / total,
-      amertume: amertume / total,
-      teneur: teneur / total,
-      odorat: odorat / total,
-    ),
-    createdAt: DateTime.now(),
-    submitted: false,
-  );
+  Future<void> sellBlend({required BuildContext context, required Blend blend}) async {
+    final player = context.read<PlayerProvider>().player;
+    final stock = context.read<StockProvider>().stock;
+    if (player == null || stock == null || blend.submitted) return;
 
-  for (var entry in selectedGrains.entries) {
-    await context.read<StockProvider>().removeGrain(player.uid, entry.key, entry.value);
+    await context.read<StockProvider>().incrementDeevee(player.uid, GameConfig.blendSellPrice);
+
+    await context.read<StockProvider>().loadStock(player.uid);
   }
 
-  await BlendService().createBlend(blend);
-  await context.read<StockProvider>().loadStock(player.uid);
-
-  return blend;
-}
 }

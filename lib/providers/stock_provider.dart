@@ -24,6 +24,14 @@ class StockProvider extends ChangeNotifier {
 
   }
 
+  Future<void> incrementDeevee(String playerId, int amount) async {
+    if (_stock == null) return;
+    final newDeevee = _stock!.deevee + amount;
+    _stock = _stock!.copyWith(deevee: newDeevee);
+    await _stockService.updateDeevee(playerId, newDeevee);
+    notifyListeners();
+  }
+
   Future<void> addFruit(String playerId, KafeType type, double amount) async {
     await _stockService.addFruit(playerId, type, amount);
     await loadStock(playerId);

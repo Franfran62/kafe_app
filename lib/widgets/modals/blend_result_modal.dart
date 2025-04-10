@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_asset.dart';
+import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/blend.dart';
 import 'package:kafe_app/services/helper/clean_double.dart';
 
 Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
+
+  final GameController _gameController = GameController();
+
   await showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -57,28 +61,27 @@ Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.emoji_events),
-                    label: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text("Soumettre"),
-                        Text("au concours"),
-                      ],
+                  Center(
+                    child: ElevatedButton.icon(
+                      icon: const Icon(Icons.emoji_events),
+                      label: Text("Soumettre au concours"),
+                      onPressed: () {}, // à venir
                     ),
-                    onPressed: () {}, // à venir
                   ),
                   const SizedBox(height: 12),
-                  OutlinedButton.icon(
-                    icon: const Icon(Icons.sell),
-                    label: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: const [
-                        Text("Vendre"),
-                        Text("+3 DeeVee ${GameAsset.deeveeEmoji}"),
-                      ],
+                  Center(
+                    child: OutlinedButton.icon(
+                      icon: const Icon(Icons.sell),
+                      label: Text("Vendre +3 DeeVee ${GameAsset.deeveeEmoji}"),
+                      onPressed: () async {
+                        await _gameController.sellBlend(context: context, blend: blend);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Blend vendu (+3 DeeVee)"),
+                          ),
+                        );
+                      }, 
                     ),
-                    onPressed: () {}, // à venir
                   ),
                 ],
               ),

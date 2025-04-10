@@ -100,7 +100,7 @@ class _BlendScreenState extends State<BlendScreen> {
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Center(
               child: Text(
-                "Poids total (kg) : ${totalSelectedWeight.toStringAsFixed(2)}",
+                "Poids total : ${totalSelectedWeight.toStringAsFixed(2)} kg",
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
