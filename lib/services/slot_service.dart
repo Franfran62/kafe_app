@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kafe_app/models/enums/kafe_type.dart';
 import '../models/field.dart';
-import '../models/slot.dart';
+import '../models/wrapper/slot.dart';
 
 class SlotService {
 

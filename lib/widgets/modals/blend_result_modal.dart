@@ -65,7 +65,13 @@ Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
                     child: ElevatedButton.icon(
                       icon: const Icon(Icons.emoji_events),
                       label: Text("Soumettre au concours"),
-                      onPressed: () {}, // à venir
+                      onPressed: () async {
+                        _gameController.submitBlendToContest(context: context, blend: blend);
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Kafé soumis au concours")),
+                        );
+                      }, 
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -77,7 +83,7 @@ Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
                         await _gameController.sellBlend(context: context, blend: blend);
                         Navigator.pop(context);
                         ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Blend vendu (+3 DeeVee)"),
+                          const SnackBar(content: Text("Kafé vendu (+3 DeeVee)"),
                           ),
                         );
                       }, 

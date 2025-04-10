@@ -4,7 +4,7 @@ import 'package:kafe_app/game/game_controller.dart';
 import 'package:kafe_app/models/enums/field_specialty.dart';
 import 'package:kafe_app/models/field.dart';
 import 'package:kafe_app/models/player.dart';
-import 'package:kafe_app/models/slot.dart';
+import 'package:kafe_app/models/wrapper/slot.dart';
 import 'package:kafe_app/providers/field_provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/screens/field/field_detail_screen.dart';

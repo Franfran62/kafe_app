@@ -1,5 +1,5 @@
 import 'package:kafe_app/models/enums/field_specialty.dart';
-import 'slot.dart';
+import 'wrapper/slot.dart';
 
 class Field {
   final String id;

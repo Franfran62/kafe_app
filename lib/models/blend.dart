@@ -6,7 +6,6 @@ class Blend {
   final double totalWeight;
   final GatoStats stats;
   final DateTime createdAt;
-  final bool submitted;
 
   const Blend({
     required this.id,
@@ -14,7 +13,6 @@ class Blend {
     required this.totalWeight,
     required this.stats,
     required this.createdAt,
-    required this.submitted,
   });
 
   Map<String, dynamic> toMap() => {
@@ -22,7 +20,6 @@ class Blend {
     'totalWeight': totalWeight,
     'stats': stats.toMap(),
     'createdAt': createdAt.toIso8601String(),
-    'submitted': submitted,
   };
 
   factory Blend.fromMap(String id, Map<String, dynamic> map) => Blend(
@@ -31,6 +28,5 @@ class Blend {
     totalWeight: (map['totalWeight'] as num).toDouble(),
     stats: GatoStats.fromMap(map['stats']),
     createdAt: DateTime.parse(map['createdAt']),
-    submitted: map['submitted'] ?? false,
   );
 }

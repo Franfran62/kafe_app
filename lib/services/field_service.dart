@@ -6,7 +6,7 @@ import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/services/player_service.dart';
 import '../models/field.dart';
-import '../models/slot.dart';
+import '../models/wrapper/slot.dart';
 
 class FieldService {
 

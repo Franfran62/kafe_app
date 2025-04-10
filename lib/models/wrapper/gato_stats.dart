@@ -1,3 +1,5 @@
+import 'package:kafe_app/services/helper/round_double.dart';
+
 class GatoStats {
   final double gout;
   final double amertume;
@@ -26,4 +28,11 @@ class GatoStats {
   );
 
   double get average => (gout + amertume + teneur + odorat) / 4;
+
+  GatoStats rounded() => GatoStats(
+    gout: roundDouble(gout),
+    amertume: roundDouble(amertume),
+    teneur: roundDouble(teneur),
+    odorat: roundDouble(odorat),
+  );
 }
