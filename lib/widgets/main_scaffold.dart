@@ -5,6 +5,7 @@ import 'package:kafe_app/screens/blend/blend_screen.dart';
 import 'package:kafe_app/screens/contest/contest_screen.dart';
 import 'package:kafe_app/screens/drying/drying_screen.dart';
 import 'package:kafe_app/screens/field/fields_screen.dart';
+import 'package:kafe_app/widgets/currency_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 
@@ -69,15 +70,21 @@ class _MainScaffoldState extends State<MainScaffold> {
         ],
       ),
       body: _screens[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.grey[200], 
-        currentIndex: _selectedIndex,
-        onTap: _onBottomNavTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.park), label: "Champs"),
-          BottomNavigationBarItem(icon: Icon(Icons.local_fire_department), label: "Séchage"),
-          BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: "Assemblage"),
-          BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "Concours"),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CurrencyBar(),
+          BottomNavigationBar(
+            backgroundColor: Colors.grey[200], 
+            currentIndex: _selectedIndex,
+            onTap: _onBottomNavTapped,
+            items: const [
+              BottomNavigationBarItem(icon: Icon(Icons.park), label: "Champs"),
+              BottomNavigationBarItem(icon: Icon(Icons.local_fire_department), label: "Séchage"),
+              BottomNavigationBarItem(icon: Icon(Icons.auto_awesome), label: "Assemblage"),
+              BottomNavigationBarItem(icon: Icon(Icons.emoji_events), label: "Concours"),
+            ],
+          ),
         ],
       ),
     );
