@@ -2,12 +2,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/models/contest.dart';
+import 'package:kafe_app/models/player.dart';
 import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/services/contest_service.dart';
+import 'package:kafe_app/services/player_service.dart';
 import 'package:provider/provider.dart';
 
 class GameContest {
   final ContestService _contestService = ContestService();
+  final PlayerService _playerService = PlayerService();
 
   Future<Contest?> checkAndRewardContest(BuildContext context, String playerId) async {
     final contest = await _findContestToJudge();
@@ -16,11 +19,12 @@ class GameContest {
     final selectedTrials = _drawTrials();
     final scores = _computeAllScores(contest.participants, selectedTrials);
     final winnerId = _selectWinnerId(scores);
-    final winner = _getParticipant(contest, winnerId);
+    final winner = await _getPlayerFromContest(contest, winnerId);
+    if (winner == null) return null;
 
     await _rewardWinner(context, winnerId);
 
-    final updatedContest = _buildUpdatedContest(contest, winnerId, winner.playerId, selectedTrials);
+    final updatedContest = _buildUpdatedContest(contest, winner, selectedTrials);
     await _contestService.saveContest(updatedContest);
 
     return updatedContest;
@@ -59,8 +63,14 @@ class GameContest {
   }
 
   /// Trouve la soumission correspondant à un playerId.
-  dynamic _getParticipant(Contest contest, String playerId) {
-    return contest.participants.firstWhere((p) => p.playerId == playerId);
+  Future<Player?> _getPlayerFromContest(Contest contest, String playerId) async {
+    try {
+       final contestSubmission = contest.participants.firstWhere((p) => p.playerId == playerId);
+       final player = await _playerService.getPlayer(contestSubmission.playerId);
+       return player;
+    } catch (e) {
+      return null;
+    }
   }
 
   /// Récompense le joueur avec des DeeVee et de l'or.
@@ -73,14 +83,13 @@ class GameContest {
   /// Construit une nouvelle instance du concours avec les infos mises à jour.
   Contest _buildUpdatedContest(
     Contest contest,
-    String winnerId,
-    String winnerName,
+    Player winner,
     List<String> trials,
   ) {
     return contest.copyWith(
       completed: true,
-      winnerId: winnerId,
-      winnerName: winnerName,
+      winnerId: winner.uid,
+      winnerName: "${winner.name} ${winner.firstname}",
       trialNames: trials,
     );
   }

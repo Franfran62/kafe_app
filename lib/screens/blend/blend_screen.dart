@@ -34,27 +34,6 @@ class _BlendScreenState extends State<BlendScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Stock de Grains ${GameAsset.GrainEmoji}",
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          const SizedBox(height: 8),
-          ...grains.entries.map((entry) {
-            final type = entry.key;
-            final available = entry.value;
-            final selected = _selection[type] ?? 0;
-            final remaining = (available - selected).clamp(0, double.infinity);
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(type.label),
-                Text(
-                  "${remaining.toStringAsFixed(2)} kg",
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ],
-            );
-          }).toList(),
 
           const SizedBox(height: 24),
           Text("Assembler un Kafé ${GameAsset.kafeEmoji} :",

@@ -5,6 +5,7 @@ import 'package:kafe_app/models/blend.dart';
 import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/services/contest_service.dart';
 import 'package:kafe_app/services/helper/clean_double.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
@@ -43,11 +44,19 @@ Future<void> showBlendResultModal(BuildContext context, Blend blend) async {
                 ),
               ),
             ),
-            Center(child: Text("Kafé créé avec succès !", style: Theme.of(context).textTheme.titleLarge)),
+            Center(
+              child: Lottie.asset(
+                'assets/animations/blending.json',
+                height: 140,
+                repeat: true,
+              ),
+            ),
+            Center(
+              child: Text("Kafé créé avec succès !", style: Theme.of(context).textTheme.titleLarge)),
             const SizedBox(height: 12),
             Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [ 
                 for (final entry in {
                   'Goût': blend.stats.gout,
