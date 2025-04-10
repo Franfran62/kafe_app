@@ -10,8 +10,7 @@ import 'package:kafe_app/providers/player_provider.dart';
 
 class MainScaffold extends StatefulWidget {
 
-  final String title;
-  const MainScaffold({required this.title, super.key});
+  const MainScaffold({super.key});
 
   @override
   State<MainScaffold> createState() => _MainScaffoldState();
@@ -52,7 +51,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(widget.title),
+        title: null,
         actions: [
           PopupMenuButton<String>(
             onSelected: _onMenuSelected,

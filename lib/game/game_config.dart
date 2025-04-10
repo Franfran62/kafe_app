@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:kafe_app/models/enums/kafe_type.dart';
+import 'package:kafe_app/models/wrapper/gato_stats.dart';
 
 class GameConfig {
 
@@ -111,5 +114,45 @@ class GameConfig {
       'odorat': 87,
     },
   };
+
+  // --------------------------
+  // Contest
+  // --------------------------
+
+  // DeeVee pour la gagnant
+  static const int deeVeeForWinner = 3;
+  // Gold pour le gagnant
+  static const int goldForWinner = 2;
+  static List<String> contestTrials = [
+    'tasse',
+    'kafetiere',
+    'degustation',
+  ];
+  // Score de chaque épreuve
+  static double computeScore(String trial, GatoStats stats) {
+    final chance = Random().nextDouble();
+    switch (trial) {
+      case 'tasse':
+        return 0.8 * stats.gout +
+               1.0 * stats.teneur +
+               0.3 * stats.odorat +
+               0.1 * stats.amertume +
+               chance;
+      case 'kafetiere':
+        return 0.1 * stats.gout +
+               0.5 * stats.teneur +
+               0.8 * stats.odorat +
+               0.1 * stats.amertume +
+               chance;
+      case 'degustation':
+        return 0.8 * stats.gout +
+               0.4 * stats.teneur +
+               0.4 * stats.odorat +
+               0.4 * stats.amertume +
+               chance;
+      default:
+        return 0;
+    }
+  }
 }
 

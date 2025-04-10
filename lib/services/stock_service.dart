@@ -42,12 +42,6 @@ class StockService {
     await docRef.set({'fruits': fruits}, SetOptions(merge: true));
   }
 
-  Future<void> updateDeevee(String playerId, int newAmount) async {
-    await _db.collection('stocks').doc(playerId).update({
-      'deevee': newAmount,
-    });
-  }
-
   Future<void> removeFruit(String playerId, KafeType type, double amount) async {
     final docRef = _db.collection('stocks').doc(playerId);
     final doc = await docRef.get();
@@ -77,5 +71,17 @@ class StockService {
 
 
     await docRef.update({"grains": grains});
+  }
+
+  Future<void> updateDeevee(String playerId, int newAmount) async {
+    await _db.collection('stocks').doc(playerId).update({
+      'deevee': newAmount,
+    });
+  }
+
+  Future<void> updateGold(String playerId, int newAmount) async {
+    await _db.collection('stocks').doc(playerId).update({
+      'goldGrains': newAmount,
+    });
   }
 }

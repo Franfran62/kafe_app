@@ -49,8 +49,26 @@ class _ContestScreenState extends State<ContestScreen> {
     setState(() => _submission = submission);
   }
 
+  Duration timeUntilNextContest() {
+    final now = DateTime.now();
+    final currentHour = DateTime(now.year, now.month, now.day, now.hour, 19);
+    
+    if (now.isBefore(currentHour)) {
+      return currentHour.difference(now);
+    } else {
+      final nextHour = currentHour.add(const Duration(hours: 1));
+      return nextHour.difference(now); 
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    final remaining = timeUntilNextContest();
+    final minutes = remaining.inMinutes;
+    String message = remaining.inSeconds < 60
+         ? "⏳ Concours imminent..."
+         : "Prochain concours dans $minutes minute${minutes > 1 ? 's' : ''}";
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -63,7 +81,7 @@ class _ContestScreenState extends State<ContestScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Text("Prochain concours dans : ${_timeUntilNext.inMinutes} min", style: Theme.of(context).textTheme.bodyLarge),
+            child: Text(message, style: Theme.of(context).textTheme.bodyLarge),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12.0),

@@ -32,6 +32,14 @@ class StockProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> incrementGold(String playerId, int amount) async {
+    if (_stock == null) return;
+    final newGold = _stock!.goldGrains + amount;
+    _stock = _stock!.copyWith(goldGrains: newGold);
+    await _stockService.updateGold(playerId, newGold);
+    notifyListeners();
+  }
+
   Future<void> addFruit(String playerId, KafeType type, double amount) async {
     await _stockService.addFruit(playerId, type, amount);
     await loadStock(playerId);
