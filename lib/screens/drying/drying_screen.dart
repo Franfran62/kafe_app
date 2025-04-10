@@ -42,6 +42,20 @@ class DryingScreen extends StatelessWidget {
               subtitle: Text(!isEnough
                   ? "Pas de stock"
                   : "${amount.toStringAsFixed(2)} kg disponible"),
+              trailing: 
+                isEnough
+                  ? Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      "À sécher",
+                      style: TextStyle(color: Colors.orange.shade800, fontWeight: FontWeight.w600),
+                    ),
+                  )
+                  : null,
               onTap: () async {
                 if (isEnough) {
                   final toDry = await showDryingModal(
