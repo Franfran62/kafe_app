@@ -86,7 +86,7 @@ class _SlotItemState extends State<SlotItem> {
       elevation: 2,
       child: ListTile(
         title: Text("Emplacement ${widget.index + 1}"),
-        subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !"),
+        subtitle: Text("${GameAsset.slotReadyEmoji} Récolter !", style: TextStyle(color: Colors.green)),
         trailing: Text(widget.slot.kafeType ?? ""),
         onTap: () async {
           final result = await _gameController.harvestAndRefresh(

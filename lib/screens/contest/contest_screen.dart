@@ -34,6 +34,8 @@ class _ContestScreenState extends State<ContestScreen> {
     final now = DateTime.now();
     final next = DateTime(now.year, now.month, now.day, now.hour, 19);
     final nextSlot = now.isAfter(next) ? next.add(const Duration(hours: 1)) : next;
+
+    if (!mounted) return;
     setState(() {
       _timeUntilNext = nextSlot.difference(now);
       _timer = Timer.periodic(const Duration(seconds: 60), (_) => _updateTimer());
@@ -51,41 +53,46 @@ class _ContestScreenState extends State<ContestScreen> {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Concours ${GameAsset.contestEmoji}", style: Theme.of(context).textTheme.headlineMedium),
-          const SizedBox(height: 12),
-          Text("Prochain concours dans : ${_timeUntilNext.inMinutes} min", style: Theme.of(context).textTheme.bodyLarge),
-           const SizedBox(height: 12),
-          Text("Ta participation ${GameAsset.kafeEmoji}", style: Theme.of(context).textTheme.headlineMedium),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text("Concours ${GameAsset.contestEmoji}", style: Theme.of(context).textTheme.headlineMedium),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: Text("Prochain concours dans : ${_timeUntilNext.inMinutes} min", style: Theme.of(context).textTheme.bodyLarge),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12.0),
+            child: Text("Ta participation ${GameAsset.kafeEmoji}", style: Theme.of(context).textTheme.headlineMedium),
+          ),
           const SizedBox(height: 12),
           if (_submission != null) ...[
-            Text("Ta participation :", style: Theme.of(context).textTheme.titleMedium),
             ...{
               'Goût': _submission!.stats.gout,
               'Amertume': _submission!.stats.amertume,
               'Teneur': _submission!.stats.teneur,
               'Odorat': _submission!.stats.odorat,
             }.entries.map((e) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              child: Row(
-                children: [
-                  SizedBox(width: 90, child: Text(e.key)),
-                  Text(e.value.toCleanString(), style: Theme.of(context).textTheme.bodyLarge),
-                ],
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(width: 90, child: Text(e.key)),
+                    Text("${e.value.toCleanString()} / 100", style: Theme.of(context).textTheme.bodyLarge),
+                  ],
+                ),
               ),
-            ))
-          ] else
-            const Text("Tu n'as pas encore participé au concours actuel."),
-            const SizedBox(height: 12),
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () => GoRouter.of(context).go('/?tab=2'),
-                icon: const Icon(Icons.coffee),
-                label: const Text("Assembler un kafé"),
-              ),
+            )
+          ] else 
+            Column(
+              children: [
+                const Text("Tu n'as pas encore participé au concours actuel."),
+                const Text("Assemble un Kafé pour participer !")
+              ],
             ),
         ],
       ),
