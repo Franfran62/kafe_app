@@ -22,4 +22,9 @@ class GameAsset {
 
   /// Types de kafé
   static const String kafeEmoji = "☕️"; // Général pour un plan de kafé
+
+  // Concours
+  static const String contestEmoji = "🏆"; // Concours
+  static const String contestWinnerEmoji = "🥇"; // Concours gagnant
+  static const String contestSecondWinnerEmoji = "🥈"; // Concours 2ème place
 }
