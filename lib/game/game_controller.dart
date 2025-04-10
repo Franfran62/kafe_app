@@ -97,6 +97,8 @@ class GameController {
     await _slotService.clearSlot(field, slotIndex);
     await _stockService.addFruit(player.uid, kafeType, weight);
     await context.read<FieldProvider>().reloadFields(player.uid);
+    await context.read<StockProvider>().loadStock(player.uid);
+
 
     return HarvestResult(
       type: kafeType,
@@ -115,11 +117,11 @@ class GameController {
     await context.read<StockProvider>().addGrain(player.uid, type, driedAmount);
   }
 
- Future<void> createBlend({required BuildContext context, required Map<KafeType, double> selectedGrains}) async {
+ Future<Blend?> createBlend({required BuildContext context, required Map<KafeType, double> selectedGrains}) async {
   
   final player = context.read<PlayerProvider>().player;
   final stock = context.read<StockProvider>().stock;
-  if (player == null || stock == null) return;
+  if (player == null || stock == null) return null;
 
   double total = 0;
   double gout = 0;
@@ -159,5 +161,7 @@ class GameController {
 
   await BlendService().createBlend(blend);
   await context.read<StockProvider>().loadStock(player.uid);
+
+  return blend;
 }
 }

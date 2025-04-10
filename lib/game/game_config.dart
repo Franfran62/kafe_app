@@ -61,35 +61,48 @@ class GameConfig {
   // ratio de perte
   static const double dryingLossRatio = 0.0458;
 
-  // Statistique Kafé
+
+  // --------------------------
+  // Blend
+  // --------------------------
+
+  // Les GATO
+  static List<String> gatoList() => [
+    'gout',
+    'amertume',
+    'teneur',
+    'odorat',
+  ];
+
+  // Les grains
   static Map<String, int> gato(KafeType type) => gatoStats[type]!;
   static final Map<KafeType, Map<String, int>> gatoStats = {
     KafeType.rubisca: {
-      'goût': 15,
+      'gout': 15,
       'amertume': 54,
       'teneur': 35,
       'odorat': 19,
     },
     KafeType.arbrista: {
-      'goût': 87,
+      'gout': 87,
       'amertume': 4,
       'teneur': 35,
       'odorat': 59,
     },
     KafeType.roupetta: {
-      'goût': 35,
+      'gout': 35,
       'amertume': 41,
       'teneur': 75,
       'odorat': 67,
     },
     KafeType.tourista: {
-      'goût': 3,
+      'gout': 3,
       'amertume': 91,
       'teneur': 74,
       'odorat': 6,
     },
     KafeType.goldoria: {
-      'goût': 39,
+      'gout': 39,
       'amertume': 9,
       'teneur': 7,
       'odorat': 87,

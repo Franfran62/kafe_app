@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/game/game_controller.dart';
@@ -20,6 +22,13 @@ class FieldsScreen extends StatefulWidget {
 class _FieldsScreenState extends State<FieldsScreen> {
 
   final GameController _gameController = GameController();
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -30,6 +39,9 @@ class _FieldsScreenState extends State<FieldsScreen> {
       Provider.of<FieldProvider>(context, listen: false).loadFields(player.uid);
     }
   });
+   _timer = Timer.periodic(const Duration(seconds: 30), (_) {
+      setState(() {});
+    });
   }
 
   @override
@@ -64,8 +76,10 @@ class _FieldsScreenState extends State<FieldsScreen> {
                       );
                     },
                     title: Text("${GameAsset.fieldEmoji}  ${field.name}"),
-                    subtitle: Text(
-                        "${field.slots.where((s) => s.kafeType != null).length}/${GameConfig.slotsPerField} actifs"),
+                    subtitle:
+                      field.hasReadySlot()
+                        ? Text("Prêt à récolter", style: TextStyle(color: Colors.green))
+                        : Text("${field.slots.where((s) => s.kafeType != null).length}/${GameConfig.slotsPerField} actifs"),
                     trailing: Text(field.specialty.label),
                   ),
                 )),

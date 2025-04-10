@@ -36,6 +36,15 @@ class Field {
     );
   }
 
+  bool hasReadySlot() {
+    return slots.any((slot) {
+      if (!slot.isPlanted) return false;
+      final readyAt = slot.plantedAt!.add(slot.growthTime(specialty));
+      return DateTime.now().isAfter(readyAt);
+    });
+  }
+
+
   @override
   String toString() {
     return 'Field(id: $id, name: $name, playerId: $playerId, specialty: $specialty, slots: $slots)';
