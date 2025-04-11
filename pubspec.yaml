@@ -30,4 +30,5 @@ flutter:
     - assets/animations/trophy.json
     - assets/animations/drying.json
     - assets/animations/blending.json
+    - assets/images/kafeiculteur.png
 

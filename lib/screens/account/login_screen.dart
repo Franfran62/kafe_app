@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kafe_app/game/auth_game_controller.dart';
-import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/widgets/form_player.dart';
-import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -64,9 +62,17 @@ class _LoginScreenState extends State<LoginScreen> {
       ? const Center(child: CircularProgressIndicator())
       : SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(32),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
+                child: Image.asset(
+                  "assets/images/kafeiculteur.png",
+                  width: MediaQuery.of(context).size.width / 2,
+                  ),
+              ),
               FormPlayer(
                 formKey: _formKey,
                 isLogin: true,
