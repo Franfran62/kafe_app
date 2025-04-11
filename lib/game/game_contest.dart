@@ -18,7 +18,7 @@ class GameContest {
     if (player == null) return null;
 
     final contest = await _findContestToJudge(player.uid);
-    if (contest == null || contest.participants.isEmpty) return null;
+    if (contest == null) return null;
 
     if (contest.completed) {
       if (contest.winnerId == player.uid && !contest.modalShownToWinner) {
@@ -30,7 +30,6 @@ class GameContest {
   
     final selectedTrials = _drawTrials();
     final scores = _computeAllScores(contest.participants, selectedTrials);
-    
     final winnerId = _selectWinnerId(scores);
     if (player.uid != winnerId) return null;
 

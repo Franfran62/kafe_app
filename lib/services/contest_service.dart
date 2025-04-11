@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:kafe_app/models/contest.dart';
 import 'package:kafe_app/models/wrapper/contest_submission.dart';
-import 'package:kafe_app/game/game_config.dart';
-import 'dart:math';
 
 class ContestService {
   final _db = FirebaseFirestore.instance;
@@ -23,10 +21,8 @@ class ContestService {
     final contestRef = _db.collection('contests').doc(contestId);
     final contestSnap = await contestRef.get();
     if (!contestSnap.exists) {
-      final randomField = GameConfig.gatoList()[Random().nextInt(4)];
       await contestRef.set({
         'date': DateTime.parse(contestId),
-        'field': randomField,
         'completed': false,
         'winnerId': null,
         'winnerName': null,
