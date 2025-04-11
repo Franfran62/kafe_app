@@ -20,6 +20,7 @@ class FieldDetailScreen extends StatelessWidget {
         body: Center(child: CircularProgressIndicator()),
       );
     }
+
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(onPressed: () => Navigator.pop(context)),

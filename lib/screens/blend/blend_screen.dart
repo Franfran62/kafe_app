@@ -23,10 +23,11 @@ class _BlendScreenState extends State<BlendScreen> {
 
     @override
   Widget build(BuildContext context) {
-    final stock = context.watch<StockProvider>().stock;
-    if (stock == null) return const Center(child: CircularProgressIndicator());
-
-    final grains = stock.grains;
+    final grains = context.select<StockProvider, Map<KafeType, double>>(
+      (provider) => provider.stock?.grains ?? {},
+    );
+    if (grains == {}) return const Center(child: CircularProgressIndicator());
+    
     final totalStock = grains.values.fold(0.0, (sum, v) => sum + v);
 
     return SingleChildScrollView(

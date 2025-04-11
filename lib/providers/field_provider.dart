@@ -12,6 +12,7 @@ class FieldProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
 
   Future<void> loadFields(String playerId) async {
+    if (_fields.isNotEmpty) return;
     _isLoading = true;
     notifyListeners();
 

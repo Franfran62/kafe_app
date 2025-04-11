@@ -19,17 +19,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final AuthGameController _authGameController = AuthGameController();
   bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    final currentUser = FirebaseAuth.instance.currentUser;
-    if (currentUser == null) {
-      Future.microtask(() {
-        GoRouter.of(context).pushReplacementNamed('game_home');
-      });
-    }
-  }
-
+  
   Future<void> _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);

@@ -43,10 +43,15 @@ class _ContestScreenState extends State<ContestScreen> {
   }
 
   Future<void> _load() async {
+    if (_submission != null) return; 
+
     final player = context.read<PlayerProvider>().player;
     if (player == null) return;
+
     final submission = await ContestService().getSubmission(player.uid);
-    setState(() => _submission = submission);
+    if (mounted) {
+      setState(() => _submission = submission);
+    }
   }
 
   Duration timeUntilNextContest() {
