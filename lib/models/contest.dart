@@ -7,7 +7,8 @@ class Contest {
   final String? winnerId;
   final String? winnerName;
   final List<ContestSubmission> participants;
-  final List<String>? trialNames; 
+  final List<String>? trialNames;
+  final bool modalShownToWinner;
 
   Contest({
     required this.id,
@@ -17,6 +18,7 @@ class Contest {
     required this.winnerName,
     required this.participants,
     this.trialNames,
+    required this.modalShownToWinner,
   });
 
   factory Contest.fromMap(String id, Map<String, dynamic> map, List<ContestSubmission> participations) {
@@ -28,6 +30,7 @@ class Contest {
       winnerName: map['winnerName'],
       participants: participations,
       trialNames: List<String>.from(map['trialNames'] ?? []),
+      modalShownToWinner: map['modalShownToWinner'],
     );
   }
 
@@ -36,6 +39,7 @@ class Contest {
     'winnerId': winnerId,
     'winnerName': winnerName,
     'trialNames': trialNames,
+    'modalShownToWinner': modalShownToWinner,
   };
 
   Contest copyWith({
@@ -43,6 +47,7 @@ class Contest {
     String? winnerId,
     String? winnerName,
     List<String>? trialNames,
+    bool? modalShownToWinner,  
   }) {
     return Contest(
       id: id,
@@ -52,6 +57,7 @@ class Contest {
       winnerName: winnerName ?? this.winnerName,
       trialNames: trialNames ?? this.trialNames,
       participants: participants,
+      modalShownToWinner: modalShownToWinner ?? this.modalShownToWinner,
     );
   }
 }

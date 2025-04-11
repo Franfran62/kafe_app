@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kafe_app/game/game_config.dart';
 import 'package:kafe_app/models/contest.dart';
 import 'package:kafe_app/models/player.dart';
+import 'package:kafe_app/providers/player_provider.dart';
 import 'package:kafe_app/providers/stock_provider.dart';
 import 'package:kafe_app/services/contest_service.dart';
 import 'package:kafe_app/services/player_service.dart';
@@ -10,37 +11,54 @@ import 'package:provider/provider.dart';
 
 class GameContest {
   final ContestService _contestService = ContestService();
-  final PlayerService _playerService = PlayerService();
 
-  Future<Contest?> checkAndRewardContest(BuildContext context, String playerId) async {
-    final contest = await _findContestToJudge();
-    if (contest == null || contest.participants.isEmpty) return null;
+  Future<Contest?> checkAndRewardContest(BuildContext context) async {
     
+    final player = context.read<PlayerProvider>().player;
+    if (player == null) return null;
+
+    final contest = await _findContestToJudge(player.uid);
+    if (contest == null || contest.participants.isEmpty) return null;
+
+    if (contest.completed) {
+      if (contest.winnerId == player.uid && !contest.modalShownToWinner) {
+        await _contestService.markModalAsShown(contest.id);
+        return contest;
+      }
+      return null;
+    }
+  
     final selectedTrials = _drawTrials();
     final scores = _computeAllScores(contest.participants, selectedTrials);
+    
     final winnerId = _selectWinnerId(scores);
-    final winner = await _getPlayerFromContest(contest, winnerId);
-    if (winner == null) return null;
+    if (player.uid != winnerId) return null;
 
-    await _rewardWinner(context, winnerId);
-
-    final updatedContest = _buildUpdatedContest(contest, winner, selectedTrials);
+    final updatedContest = _buildUpdatedContest(contest, player, selectedTrials);
     await _contestService.saveContest(updatedContest);
+    await _rewardWinner(context, winnerId);
 
     return updatedContest;
   }
 
-  /// Récupère le premier concours non terminé et déjà échu.
-  Future<Contest?> _findContestToJudge() async {
+  ///  Cherche un concours non jugé
+  ///  Et cherche un concours gagné par le joueur, mais dont le modal n'a pas été montré.
+  Future<Contest?> _findContestToJudge(String playerId) async {
     final now = DateTime.now();
     final contests = await _contestService.getAllContests();
-    try { 
+
+    try {
       return contests.firstWhere(
-      (c) => !c.completed && c.date.isBefore(now)
-    );
-    } catch (e) {
-      return null;
-    }
+        (c) => !c.completed && c.date.isBefore(now),
+      );
+    } catch (_) {}
+    try {
+      return contests.firstWhere(
+        (c) => c.completed && c.winnerId == playerId && !c.modalShownToWinner,
+      );
+    } catch (_) {}
+
+    return null;
   }
 
   /// Tire aléatoirement deux épreuves parmi les disponibles.
@@ -60,17 +78,6 @@ class GameContest {
   /// Retourne l'identifiant du joueur avec le score le plus élevé.
   String _selectWinnerId(Map<String, double> scores) {
     return scores.entries.reduce((a, b) => a.value > b.value ? a : b).key;
-  }
-
-  /// Trouve la soumission correspondant à un playerId.
-  Future<Player?> _getPlayerFromContest(Contest contest, String playerId) async {
-    try {
-       final contestSubmission = contest.participants.firstWhere((p) => p.playerId == playerId);
-       final player = await _playerService.getPlayer(contestSubmission.playerId);
-       return player;
-    } catch (e) {
-      return null;
-    }
   }
 
   /// Récompense le joueur avec des DeeVee et de l'or.

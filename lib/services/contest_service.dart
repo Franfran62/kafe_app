@@ -30,6 +30,7 @@ class ContestService {
         'completed': false,
         'winnerId': null,
         'winnerName': null,
+        'modalShownToWinner': false
       });
     }
 
@@ -66,6 +67,7 @@ class ContestService {
         winnerId: data['winnerId'],
         winnerName: data['winnerName'],
         participants: participations,
+        modalShownToWinner: data['modalShownToWinner'],
       );
     }));
   }
@@ -77,6 +79,12 @@ class ContestService {
       'winnerId': contest.winnerId,
       'winnerName': contest.winnerName,
       'trialNames': contest.trialNames,
+    });
+  }
+
+  Future<void> markModalAsShown(String contestId) async {
+    await _db.collection('contests').doc(contestId).update({
+      'modalShownToWinner': true,
     });
   }
 }

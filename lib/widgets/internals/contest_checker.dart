@@ -30,13 +30,10 @@ class _ContestCheckerState extends State<ContestChecker> {
     if (_isChecking || !mounted) return;
     _isChecking = true;
     try {
-      final player = context.read<PlayerProvider>().player;
-      if (player != null) {
-        final contest = await _gameContest.checkAndRewardContest(context, player.uid);
-        if (contest != null && contest.winnerId == player.uid) {
+        final contest = await _gameContest.checkAndRewardContest(context);
+        if (contest != null) {
           _showWinnerDialog(contest.trialNames ?? []);
         }
-      }
     } finally {
       _isChecking = false;
     }
