@@ -57,7 +57,7 @@ class GameController {
     final cost = GameConfig.costFor(kafeType);
     if (stock == null || player == null || stock.deevee < cost) return;
 
-    await context.read<StockProvider>().decrementDeevee(player.uid, GameConfig.fieldPurchaseCost);
+    await context.read<StockProvider>().decrementDeevee(player.uid, cost);
     await _slotService.updateSlot(
       field: field,
       slotIndex: slotIndex,
